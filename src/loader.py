@@ -1,28 +1,41 @@
-import os
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# Check current working directory
-print("Current Working Directory:", os.getcwd())
 
-# Load the PDF
-loader = PyPDFLoader("data/sample.pdf")
-documents = loader.load()
+def load_and_split_pdf(
+    pdf_path,
+    chunk_size=1000,
+    chunk_overlap=200
+):
+    """
+    Load a PDF and split it into text chunks.
 
-print("Number of Pages:", len(documents))
+    Args:
+        pdf_path (str): Path to the uploaded PDF.
+        chunk_size (int): Maximum size of each chunk.
+        chunk_overlap (int): Overlap between chunks.
 
-# Create the text splitter
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=100,
-    chunk_overlap=20
-)
+    Returns:
+        list: List of LangChain Document chunks.
+    """
 
-# Split the document into chunks
-chunks = text_splitter.split_documents(documents)
+    try:
+        # Load PDF
+        loader = PyPDFLoader(pdf_path)
+        documents = loader.load()
 
-print("Number of Chunks:", len(chunks))
+        # Create text splitter
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap
+        )
 
-# Display each chunk
-for i, chunk in enumerate(chunks):
-    print(f"\n------ Chunk {i + 1} ------")
-    print(chunk.page_content)
+        # Split documents
+        chunks = text_splitter.split_documents(documents)
+
+        return chunks
+
+    except Exception as e:
+        raise Exception(
+            f"PDF loading/chunking error: {e}"
+        )

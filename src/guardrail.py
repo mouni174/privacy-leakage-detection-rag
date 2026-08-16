@@ -22,7 +22,10 @@ def process_context(context):
 
     if sensitive:
 
-        safe_context = redact_sensitive_data(context)
+        safe_context = redact_sensitive_data(
+    context,
+    ner_findings
+)
 
         action = "Redacted"
 

@@ -1,30 +1,44 @@
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
 
-from llm import generate_answer
+from src.embeddings import get_embeddings
 
-# Load embedding model
-embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
-)
 
-# Load ChromaDB
-vector_db = Chroma(
+def get_relevant_context(
+    query,
+    collection_name="current_document",
     persist_directory="chroma_db",
-    embedding_function=embeddings
-)
+    k=3
+):
+    """
+    Retrieve the most relevant document chunks
+    for a user query.
+    """
 
-# User Question
-query = input("Ask a question: ")
+    try:
 
-# Retrieve relevant chunks
-results = vector_db.similarity_search(query, k=2)
+        vector_db = Chroma(
+            collection_name=collection_name,
+            persist_directory=persist_directory,
+            embedding_function=get_embeddings()
+        )
 
-# Combine retrieved text
-context = "\n\n".join(doc.page_content for doc in results)
+        documents = vector_db.similarity_search(
+            query,
+            k=k
+        )
 
-# Generate answer using Gemini
-answer = generate_answer(context, query)
+        context = "\n\n".join(
+            document.page_content
+            for document in documents
+        )
 
-print("\nAnswer:\n")
-print(answer)
+        return {
+            "documents": documents,
+            "context": context
+        }
+
+    except Exception as e:
+
+        raise Exception(
+            f"Retriever Error: {e}"
+        )
