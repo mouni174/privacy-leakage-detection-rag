@@ -8,19 +8,29 @@ import re
 EMAIL_PATTERN = r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
 
 PHONE_PATTERN = r"\b\d{10}\b"
-
-PAN_PATTERN = r"\b[A-Z]{5}[0-9]{4}[A-Z]\b"
+PAN_PATTERN = r"\b[A-Z]{5,6}[0-9]{4}[A-Z]\b"
 
 AADHAAR_PATTERN = r"\b\d{4}\s\d{4}\s\d{4}\b"
 
+BANK_ACCOUNT_PATTERN = r"\b\d{10,18}\b"
+
+IFSC_PATTERN = r"\b[A-Z]{4}0[A-Z0-9]{6}\b"
+
+CREDIT_CARD_PATTERN = r"\b(?:\d{4}[- ]?){3}\d{4}\b"
+
+GOVERNMENT_ID_PATTERN = r"\b[A-Z]{2,10}-ID-(?:[A-Z]{2,5}-)?\d{4,8}\b"
+
 
 # =========================================
-# NER Entities We Consider Sensitive
+# NER Entities to Redact
 # =========================================
 
 NER_REDACTION_LABELS = {
     "PERSON": "[PERSON REDACTED]",
-    "MONEY": "[MONEY REDACTED]"
+    "MONEY": "[MONEY REDACTED]",
+    "ORG": "[ORG REDACTED]",
+    "GPE": "[LOCATION REDACTED]",
+    "LOC": "[LOCATION REDACTED]"
 }
 
 
@@ -30,8 +40,7 @@ NER_REDACTION_LABELS = {
 
 def redact_sensitive_data(text: str, ner_findings=None):
     """
-    Redacts structured PII using Regex and selected
-    sensitive entities detected using NER.
+    Redacts sensitive information using Regex and NER.
     """
 
     try:
@@ -64,6 +73,33 @@ def redact_sensitive_data(text: str, ner_findings=None):
             text
         )
 
+        text = re.sub(
+            IFSC_PATTERN,
+            "[IFSC REDACTED]",
+            text
+        )
+
+        text = re.sub(
+            CREDIT_CARD_PATTERN,
+            "[CARD REDACTED]",
+            text
+        )
+
+        text = re.sub(
+            GOVERNMENT_ID_PATTERN,
+            "[ID REDACTED]",
+            text
+        )
+
+        # Bank account numbers are processed after
+        # phone numbers so phone numbers are not
+        # replaced as bank accounts.
+        text = re.sub(
+            BANK_ACCOUNT_PATTERN,
+            "[BANK_ACCOUNT REDACTED]",
+            text
+        )
+
 
         # -------------------------------------
         # 2. NER-based redaction
@@ -85,15 +121,12 @@ def redact_sensitive_data(text: str, ner_findings=None):
                     if not entity:
                         continue
 
-                    # Avoid replacing text that has already
-                    # been converted into a redaction marker.
                     if entity in text:
 
                         text = text.replace(
                             entity,
                             replacement
                         )
-
 
         return text
 

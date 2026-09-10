@@ -336,6 +336,7 @@ if st.session_state.database_ready:
                 )
 
                 st.text_area(
+                    
                     "Content sent to LLM",
                     guardrail["safe_context"],
                     height=250
