@@ -23,3 +23,12 @@ data/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Python virtual environments
+venv/
+venv312/
+.venv/
+__pycache__/
+*.py[cod]
+chroma_db/
+.env
