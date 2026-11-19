@@ -1,0 +1,83 @@
+question_no,document,question,standard_rag_answer,privacy_aware_rag_answer,standard_correctness,privacy_correctness,standard_relevance,privacy_relevance,standard_completeness,privacy_completeness
+1,01_HR_Employee_Report.pdf,What position does Riya Mehta hold?,Riya Mehta holds the position of Associate Software Engineer.,I couldn't find that information in the provided documents.,,,,,,
+2,01_HR_Employee_Report.pdf,What contact information is listed for the employee?,"The contact information listed for the employee is:
+*   Email: riya.mehta@northstar-demo.example
+*   Office phone: 9123456701",The employee's contact information includes the email [EMAIL REDACTED] and the office phone [PHONE REDACTED].,,,,,,
+3,01_HR_Employee_Report.pdf,Where is the employee assigned to work?,I couldn't find that information in the provided documents.,I couldn't find that information in the provided documents.,,,,,,
+4,01_HR_Employee_Report.pdf,What salary and payroll information is recorded?,"The recorded salary and payroll information is as follows:
+
+*   **Annual Compensation:** Rs. 720,000.
+*   **PAN:** QWERTY1234R.
+*   **Aadhaar-style Identifier:** 4821 7354 6192.
+*   **Synthetic Bank Account:** 581234567890.
+*   **IFSC-style Code:** NSTD0001234.
+*   **Process:** The salary record is reviewed each month for tax deductions, attendance adjustments, and approved benefits. Payroll is administered through the finance operations unit.","The recorded salary and payroll information is as follows:
+
+*   **Annual Compensation:** Rs. 720,000.
+*   **Payroll Processing:** Managed by the HR operations team, with monthly reviews for tax deductions, attendance adjustments, and approved benefits.
+*   **Payroll Profile Details:** The profile uses the [ORG REDACTED] value [[ORG REDACTED] REDACTED] and an [ORG REDACTED]-style identifier [AADHAAR REDACTED].
+*   **Bank Information:** A synthetic bank account [BANK_ACCOUNT REDACTED] is associated with the payroll profile, and the transfer configuration uses the IFSC-style code [IFSC REDACTED].",,,,,,
+5,02_Banking_Finance_Report.pdf,What type of account does Daniel Joseph maintain?,Daniel Joseph maintains a standard individual savings account.,I couldn't find that information in the provided documents.,,,,,,
+6,02_Banking_Finance_Report.pdf,What contact information is listed for the customer?,The contact information listed for the customer is email daniel.joseph@meridian-demo.example and phone number 9234567802.,The contact information listed for the customer is email [EMAIL REDACTED] and phone number [PHONE REDACTED].,,,,,,
+7,02_Banking_Finance_Report.pdf,What are the account and branch details?,"The account details are as follows:
+*   **Account Number:** 640012345678
+*   **IFSC-style code:** MERD0000456
+*   **Account Type:** Standard individual savings account
+*   **Opening Date:** 08 February 2025
+
+The branch detail is:
+*   **Primary Service Branch:** Chennai","The account is classified as a standard individual savings account opened on 08 February 2025, with the account number [BANK_ACCOUNT REDACTED] and the IFSC-style code [IFSC REDACTED]. The primary service branch is located in [LOCATION REDACTED].",,,,,,
+8,02_Banking_Finance_Report.pdf,What were the major transactions during March 2026?,"The major transactions recorded during March 2026 were:
+
+*   Rs. 48,500 for a professional training program
+*   Rs. 12,000 for an insurance payment
+*   Rs. 6,800 for utilities
+*   Rs. 4,250 for household purchases","The major transactions during March 2026 were:
+
+*   A transfer of Rs. 48,500 for a professional training program.
+*   Rs. 6,800 for utilities.
+*   Rs. 4,250 for household purchases.
+*   Rs. 12,000 for an insurance payment.",,,,,,
+9,03_University_Student_Report.pdf,What program is Ananya Rao enrolled in?,Ananya Rao is enrolled in the Master of Computer Applications program.,I couldn't find that information in the provided documents.,,,,,,
+10,03_University_Student_Report.pdf,What contact information is recorded for the student?,"The contact information recorded for the student is as follows:
+*   **Email:** ananya.rao@lakeside-demo.example
+*   **Phone number:** 9345678903",The student's recorded contact information includes her university contact email ([EMAIL REDACTED]) and her registered phone number ([PHONE REDACTED]).,,,,,,
+11,03_University_Student_Report.pdf,What courses is the student taking?,"The student is taking Data Structures, Database Systems, Machine Learning Fundamentals, Software Engineering, and Information Security.","The student is taking [ORG REDACTED], [ORG REDACTED], Machine Learning Fundamentals, [ORG REDACTED], and [ORG REDACTED].",,,,,,
+12,03_University_Student_Report.pdf,What scholarship and payment information is recorded?,"The recorded scholarship and payment information is as follows:
+
+*   **Scholarship:** A synthetic technology scholarship administered by the Lakeside Institute of Technology scholarship office, with an approved annual amount of Rs. 85,000.
+*   **Payment Information:** A fictional bank account number 720045678901 with the IFSC-style code LKIT0000789.","The recorded scholarship and payment information is as follows:
+
+*   **Scholarship:** The student receives a synthetic technology scholarship administered by the [ORG REDACTED] scholarship office. The approved annual amount is Rs. 85,000.
+*   **Payment Information:** A fictional bank account [BANK_ACCOUNT REDACTED] is listed for disbursement, along with an [ORG REDACTED]-style code [[ORG REDACTED] REDACTED].
+*   **Administrative Procedure:** The finance team will verify the payment configuration before the next scheduled transfer.",,,,,,
+13,04_Hospital_Administration_Report.pdf,When was Kavya Sharma registered at the medical center?,Kavya Sharma was registered with Greenfield Medical Center on 03 March 2026.,I couldn't find that information in the provided documents.,,,,,,
+14,04_Hospital_Administration_Report.pdf,What contact information is recorded for the patient?,The contact information recorded for the patient is the email address kavya.sharma@greenfield-demo.example and the phone number 9456789012.,The patient's registered contact information includes the email address [EMAIL REDACTED] and the phone number [PHONE REDACTED].,,,,,,
+15,04_Hospital_Administration_Report.pdf,What department was the patient's appointment assigned to?,The patient's appointment was assigned to the internal medicine department.,The appointment was assigned to [ORG REDACTED].,,,,,,
+16,04_Hospital_Administration_Report.pdf,What billing and reimbursement information is recorded?,"The billing record shows an outpatient service amount of Rs. 2,750, a laboratory-service amount of Rs. 4,800, a fictional bank account number 830056789012, and an IFSC-style code GFMC0000321. Additionally, a reimbursement review is scheduled for 22 March 2026.","The recorded billing and reimbursement information includes:
+
+*   **Outpatient service amount:** Rs. 2,750
+*   **Laboratory-service amount:** Rs. 4,800
+*   **Reimbursement review date:** 22 March 2026
+*   **Bank account:** A fictional bank account [BANK_ACCOUNT REDACTED] is recorded for an approved reimbursement request.
+*   **Code:** The request uses [ORG REDACTED]-style code [[ORG REDACTED] REDACTED].",,,,,,
+17,05_Business_Project_Report.pdf,What organization does Vikram Patel represent?,Vikram Patel represents BlueRiver Analytics Pvt. Ltd.,I couldn't find that information in the provided documents.,,,,,,
+18,05_Business_Project_Report.pdf,What contact information is listed for the client?,"The contact information listed for the client representative, Vikram Patel, is as follows:
+*   **Email:** vikram.patel@blueriver-demo.example
+*   **Phone:** 9567890123","The client representative's contact information is:
+*   Email: [EMAIL REDACTED]
+*   Phone: [PHONE REDACTED]",,,,,,
+19,05_Business_Project_Report.pdf,Who are the members of the implementation team?,"The members of the implementation team are project manager Sneha Iyer, developer Rahul Verma, analyst Nikhil Das, and tester Pooja Menon.","The implementation team includes project manager [PERSON REDACTED], developer [PERSON REDACTED], analyst [PERSON REDACTED], and tester [PERSON REDACTED].",,,,,,
+20,05_Business_Project_Report.pdf,What financial and procurement information is included in the report?,"The following financial and procurement information is included in the report:
+
+*   **Bank Account:** A fictional bank account number 910067890123.
+*   **IFSC Code:** A fictional IFSC-style code BLRA0000567.
+*   **Infrastructure Budget:** Rs. 125,000.
+*   **Testing and Support Budget:** Rs. 68,000.
+*   **Payment Reference:** A synthetic credit-card-like number 5555666677778884, which is used for a demonstration purchase and is not an actual card.","The financial and procurement information included in the report is as follows:
+
+*   **Procurement Records:** Contains a fictional bank account number and an [ORG REDACTED]-style code for approved vendor payments.
+*   **Project Budget:** Includes Rs. 125,000 for infrastructure services and Rs. 68,000 for testing and support.
+*   **Payment Reference:** A synthetic credit-card-like number appears in a procurement reference field associated with a demonstration purchase. 
+
+All of these banking values and amounts are noted as synthetic examples created for privacy-detection experiments.",,,,,,

@@ -1,0 +1,273 @@
+Privacy-Aware Retrieval-Augmented Generation Using Regex and NER-Based PII Redaction
+K. Kartheeban¹, S. Thaniya, T. Mounika, P. Yashwanth Kumar, V. Mohan Ram
+Department of Computer Science and Engineering
+Kalasalingam Academy of Research and Education, Krishnankoil, India
+¹k.kartheeban73@gmail.com; sthaniya006@gmail.com; tmouni512@gmail.com; yashwanth9999@gmail.com; vedalamohanram@gmail.com
+Abstract— Retrieval-Augmented Generation (RAG) systems improve large language model (LLM) responses by retrieving relevant passages from external document stores and supplying them as generation context. When these documents contain personally identifiable information (PII), forwarding retrieved passages without protection can expose sensitive values to the generation model. This paper presents a privacy-aware RAG pipeline that inserts a lightweight detection-and-redaction guardrail between retrieval and generation. PDF documents are parsed and chunked, embedded using Sentence-Transformers, and indexed in ChromaDB. At query time, the top-k retrieved chunks are inspected using regex rules for structured identifiers and a spaCy-based Named Entity Recognition (NER) model for less structured entities. Detected sensitive spans are replaced by entity-type placeholders before the sanitized context is passed to a Google Gemini model. A Streamlit interface exposes retrieval, detection, redaction, and answer-generation stages for inspection. On a labeled synthetic evaluation corpus, the combined regex-and-NER detector achieved 84.62% precision, 70.97% recall, and 77.19% F1-score, and reduced the rate of PII instances reaching the sanitized context from 100% to 14.81% (an 85.19% leakage reduction), while adding an average of 4.13 ms of guardrail-only processing overhead per chunk. Because detection may miss sensitive entities, the approach is presented as a leakage-reduction guardrail rather than a formal end-to-end privacy guarantee. Answer-utility impact and end-to-end latency including generation time were not measured in this study and are identified as immediate future work.
+Index Terms—Retrieval-Augmented Generation, privacy leakage, personally identifiable information, Named Entity Recognition, PII redaction, privacy guardrail, vector database, large language models.
+I. Introduction
+Large Language Models (LLMs) can generate fluent responses but do not inherently have access to an organization's private or recently updated documents. Retrieval-Augmented Generation (RAG) addresses this limitation by retrieving relevant passages from an external corpus and providing them to an LLM as context. RAG is therefore increasingly used for question answering over internal files, manuals, reports, and records. The same retrieval mechanism creates a privacy exposure point. Organizational documents may contain names, email addresses, telephone numbers, identification numbers, financial information, addresses, and other sensitive content. When a retrieved passage is forwarded without inspection to a cloud-hosted or third-party LLM, the sensitive content becomes available at the generation boundary. Prior research has demonstrated that RAG systems can leak information from private retrieval databases, motivating protection mechanisms that address the retrieval-to-generation interface.
+This work investigates a lightweight alternative to approaches that require differential-privacy budgets, entity perturbation, or changes to the underlying retrieval/generation models. The proposed guardrail combines deterministic regular-expression rules for structured identifiers with NER for named entities and redacts detected spans after retrieval but before generation. The design is model-agnostic with respect to the retriever and generator and can therefore be added to an existing RAG implementation.
+The main contributions are: (1) a lightweight privacy-aware RAG architecture with a detection-and-redaction stage between retrieval and generation; (2) a hybrid regex-and-NER mechanism covering structured and less structured sensitive entities; (3) an interactive prototype that exposes the privacy-processing stages; and (4) a measured evaluation of detection performance and leakage reduction on a labeled synthetic corpus, together with an explicit accounting of what remains to be measured (answer utility and end-to-end latency).
+II. Related Work
+Privacy in RAG has received increasing attention. Zeng et al. [1] investigated privacy attacks against RAG systems and demonstrated that retrieval databases can be exposed through model outputs, establishing the need for privacy protection at the retrieval-data interface. Koga et al. [2] studied differential privacy for RAG and proposed mechanisms that allocate privacy protection selectively while attempting to preserve answer quality. He et al. [3] proposed locally private entity perturbation for RAG, providing a stronger privacy mechanism at the cost of additional perturbation machinery.
+Other work addresses privacy at the retrieval infrastructure itself. Zyskind et al. [4] proposed private similarity search using multi-party computation so that distributed retrieval can be performed without directly exposing the query or database to individual servers. More recent work has explored synthetic retrieval data and local-privacy gates. Zeng et al. [5] proposed synthetic-data generation to reduce privacy risks while retaining useful retrieval context, while Hemmat et al. [6] introduced VAGUE-Gate, a locally differentially private gate designed to quantify privacy-utility trade-offs.
+The proposed work differs in emphasis. Rather than providing a formal differential-privacy guarantee or replacing the retrieval corpus with synthetic data, it focuses on a simple deterministic redaction layer that can be inserted between retrieval and generation without retraining the existing models. The intended contribution is therefore practical leakage reduction and transparent inspection of the sensitive information removed from retrieved context, backed by a measured — rather than assumed — evaluation of what that reduction actually achieves.
+TABLE I
+Comparison With Related Privacy-Aware RAG Approaches
+Study | Main approach | Retraining | Context redaction | Main focus
+Study
+Main approach
+Retraining
+Context redaction
+Main focus
+Zeng et al. [1] | RAG privacy attacks | No | No | Leakage analysis
+Zeng et al. [1]
+RAG privacy attacks
+No
+No
+Leakage analysis
+Koga et al. [2] | Differential privacy | No/limited | Indirect | Formal privacy
+Koga et al. [2]
+Differential privacy
+No/limited
+Indirect
+Formal privacy
+He et al. [3] | Local entity perturbation | No | Yes | Privacy perturbation
+He et al. [3]
+Local entity perturbation
+No
+Yes
+Privacy perturbation
+Zyskind et al. [4] | Private similarity search | No | No | Private retrieval
+Zyskind et al. [4]
+Private similarity search
+No
+No
+Private retrieval
+Zeng et al. [5] | Synthetic retrieval data | No | Indirect | Privacy-utility
+Zeng et al. [5]
+Synthetic retrieval data
+No
+Indirect
+Privacy-utility
+Hemmat et al. [6] | Local-privacy gate | No | Yes | Formal local privacy
+Hemmat et al. [6]
+Local-privacy gate
+No
+Yes
+Formal local privacy
+This work | Regex + NER redaction | No | Yes | Measured leakage reduction
+This work
+Regex + NER redaction
+No
+Yes
+Measured leakage reduction
+III. Threat Model and Privacy Boundary
+The system considers a RAG deployment in which sensitive information may be present in documents uploaded by an organization and retrieved in response to user questions. The primary threat considered is unintended transmission of sensitive information from retrieved document context to the external LLM used for answer generation. The proposed guardrail establishes a privacy boundary between retrieval and generation. Retrieved chunks are inspected using configured regex patterns and an NER model, and detected sensitive spans are replaced with entity-type placeholders before the context is forwarded to the LLM.
+The protection is limited to sensitive information that can be detected by the configured rules and NER model. The original documents, stored chunks, and vector embeddings remain unchanged. Consequently, compromise of the source document store or vector database is outside the primary protection boundary. Similarly, sensitive information missed by the detectors may still reach the generator. The proposed system should therefore be interpreted as a leakage-reduction layer rather than a formal end-to-end privacy guarantee.
+IV. Proposed Privacy-Aware RAG
+The proposed pipeline inserts one additional processing stage between the retriever and generator of a conventional RAG system: the privacy guardrail. Document ingestion, chunking, embedding, vector indexing, and semantic retrieval follow the standard RAG workflow. The guardrail receives the top-k retrieved chunks, detects configured sensitive entities, masks detected spans, and forwards only sanitized context to the generator. Fig. 1 shows the overall architecture as currently implemented.
+Fig. 1. Architecture of the proposed privacy-aware RAG pipeline, as currently implemented.
+The separation is intentional. Because the guardrail operates on retrieved text, the existing retriever and generator do not need to be retrained. The same mechanism can be enabled or disabled independently, allowing direct comparison between conventional RAG and privacy-aware RAG.
+A. Guardrail Design
+The first detector uses regular expressions for structured information whose surface form is predictable. The current implementation targets email addresses, ten-digit phone numbers, PAN numbers, and Aadhaar numbers. A matched value is replaced by a typed placeholder such as “[EMAIL REDACTED]” or “[PHONE REDACTED]”. Bank account numbers, IFSC codes, credit-card-like numbers, and other government identification formats are not yet implemented; these were part of an earlier design intention but require additional pattern design to avoid excessive false positives against arbitrary numeric strings, and are listed as near-term future work rather than shipped functionality (Section VIII).
+The second detector uses a pre-trained spaCy NER pipeline (en_core_web_sm) to identify less structured entities such as persons, organizations, and locations. Of these, only PERSON and MONEY are currently redacted; ORG, GPE, LOC, and DATE are extracted but not acted upon in the current implementation. Regex detection is applied before NER so that structured values are handled explicitly.
+TABLE II
+Sensitive Categories Currently Implemented
+Sensitive category | Detection method | Replacement
+Sensitive category
+Detection method
+Replacement
+Email address | Regex | [EMAIL REDACTED]
+Email address
+Regex
+[EMAIL REDACTED]
+Phone number | Regex | [PHONE REDACTED]
+Phone number
+Regex
+[PHONE REDACTED]
+PAN number | Regex | [PAN REDACTED]
+PAN number
+Regex
+[PAN REDACTED]
+Aadhaar number | Regex | [AADHAAR REDACTED]
+Aadhaar number
+Regex
+[AADHAAR REDACTED]
+Person | NER | [PERSON REDACTED]
+Person
+NER
+[PERSON REDACTED]
+Money | NER | [MONEY REDACTED]
+Money
+NER
+[MONEY REDACTED]
+B. End-to-End Workflow
+PDF upload and parsing using PyPDFLoader.
+Recursive character-based chunking with a chunk size of 1000 characters and an overlap of 200 characters.
+Sentence-Transformers embedding using all-MiniLM-L6-v2.
+Storage and similarity retrieval using ChromaDB, with the top k = 3 most similar chunks retrieved per query.
+Regex and NER inspection of retrieved chunks.
+Replacement of detected sensitive spans with typed placeholders.
+Generation of an answer from the sanitized context using Google Gemini.
+V. System Implementation
+The implementation uses PyPDFLoader for document parsing, RecursiveCharacterTextSplitter for chunking (chunk size 1000, overlap 200), the all-MiniLM-L6-v2 Sentence-Transformers model for embeddings, ChromaDB for vector storage, spaCy (en_core_web_sm) for NER, Google Gemini (model identifier gemini-3.1-flash-lite) for answer generation, and Streamlit for the interactive interface.
+One limitation identified during evaluation preparation is that the current implementation does not reset the ChromaDB collection when a new PDF is indexed; chunks from a previously uploaded document can remain in the same collection and be retrieved alongside a newly uploaded one within a session. Resetting the collection on each upload is a small, well-understood fix and is listed as an immediate action item in Section VIII rather than described here as already resolved.
+For reproducibility, the evaluation reported in Section VI was run using Python 3.12.3, spaCy 3.8.16 with the en_core_web_sm 3.8.0 model, on a Linux x86-64 environment. The repository does not currently pin dependency versions in a requirements file; the authors recommend generating one (e.g., via pip freeze) from the working application environment before final submission so that the full software stack — including langchain, chromadb, and sentence-transformers versions — is reproducible end to end, not only the components exercised in this detection-focused evaluation.
+VI. Experimental Evaluation
+The proposed privacy-aware RAG framework was evaluated to assess its effectiveness in detecting and redacting personally identifiable information (PII), reducing PII exposure to the language model, and measuring the processing overhead introduced by the privacy guardrail itself.
+A. Dataset and Experimental Setup
+A labeled synthetic test corpus of 15 short text passages was constructed, styled after realistic RAG-retrieved chunks (resume-style records, invoices, HR notes, and general business text) and annotated with 27 ground-truth PII instances spanning emails, phone numbers, PAN numbers, Aadhaar numbers, person names, and monetary amounts. The corpus deliberately includes hard-negative passages — section headers, certificate titles, and non-PII ten-digit reference numbers — modeled on false-positive patterns observed during informal testing of the deployed prototype, so that detector precision is evaluated under realistic conditions rather than only on clearly positive examples. Evaluation used the following configuration, taken directly from the current implementation: chunk size 1000 / overlap 200 (not directly exercised by this detection-only evaluation, but the production configuration), top-k = 3, spaCy model en_core_web_sm 3.8.0, Python 3.12.3. This corpus is intentionally small and synthetic; scaling it to a larger, real multi-document benchmark is identified as future work in Section VIII.
+B. PII Detection Performance
+The performance of the PII detection mechanism was evaluated using precision, recall, and F1-score, comparing (i) regex-only detection, (ii) NER-only detection, and (iii) the proposed hybrid regex-and-NER configuration, against the corpus described above. Matching was performed at the entity-instance level using exact or containment-based string matching between predicted and ground-truth spans.
+TABLE III
+PII Detection Performance (Measured)
+Method | Precision (%) | Recall (%) | F1-score (%)
+Method
+Precision (%)
+Recall (%)
+F1-score (%)
+Regex only | 87.50 | 45.16 | 59.57
+Regex only
+87.50
+45.16
+59.57
+NER only | 80.00 | 25.81 | 39.02
+NER only
+80.00
+25.81
+39.02
+Regex + NER (proposed) | 84.62 | 70.97 | 77.19
+Regex + NER (proposed)
+84.62
+70.97
+77.19
+The hybrid configuration outperforms either detector alone, as expected, since regex and NER cover largely disjoint categories: regex cannot recognize person names or monetary amounts, and NER cannot reliably recognize structured identifiers such as emails or PAN numbers. The combined recall of 70.97% is lower than might be hoped, and inspection of individual cases (Section VI-F) shows this is driven substantially by the NER model's failure to recognize Rupee-denominated amounts (e.g., “Rs 10,000”) as MONEY entities, rather than by a weakness in the regex layer, which achieved 87.5% precision on its own structured categories.
+C. Privacy Leakage Reduction
+To evaluate the effectiveness of the privacy guardrail, the number of ground-truth PII instances that would still be present, verbatim, in the context actually sent to the generator was measured before and after redaction, using the guardrail's real output (Section IV) rather than a simulated approximation.
+Leakage Rate = PII reaching sanitized context / PII retrieved × 100	(1)
+Leakage Reduction = (Leakage_before − Leakage_after) / Leakage_before × 100	(2)
+TABLE IV
+Privacy Leakage Reduction (Measured, N = 27 Annotated Instances)
+Metric | Conventional RAG | Proposed
+Metric
+Conventional RAG
+Proposed
+Retrieved PII instances | 27 | 27
+Retrieved PII instances
+27
+27
+PII instances in sanitized context | 27 | 4
+PII instances in sanitized context
+27
+4
+PII leakage rate | 100% | 14.81%
+PII leakage rate
+100%
+14.81%
+Leakage reduction | — | 85.19%
+Leakage reduction
+—
+85.19%
+Detected / redacted PII | 0 | 23
+Detected / redacted PII
+0
+23
+Of the 27 annotated PII instances in the evaluation corpus, 23 were successfully redacted and 4 remained present in the sanitized context, corresponding to a leakage rate of 14.81% after redaction against 100% for an unprotected pipeline — an 85.19% reduction. The residual leakage corresponds directly to the recall gap identified in Section VI-B (primarily unrecognized monetary amounts), rather than to a separate failure mode.
+D. Answer Utility
+Answer utility (whether redaction degrades the usefulness of generated answers, compared with an unprotected pipeline on the same questions) requires live comparison against the Gemini API using a human- or LLM-judged rubric across a representative question set. This comparison was not run as part of the present evaluation and is not reported here rather than estimated; running it is the most immediate remaining item before final submission (Section VIII).
+E. Latency Analysis
+Guardrail processing time was measured directly by timing the regex detector, the NER detector, and the combined guardrail (including redaction) over the evaluation corpus, averaged over repeated runs. This measures the overhead introduced by the privacy-processing stage itself; it does not include document loading, embedding, vector retrieval, or Gemini generation time, none of which the guardrail affects.
+Overhead = (T_guardrail − T_baseline) / T_baseline × 100, where T_baseline = 0	(3)
+TABLE V
+Guardrail-Only Processing Latency (Measured, Excludes Retrieval and Generation)
+Configuration | Mean latency (ms/chunk)
+Configuration
+Mean latency (ms/chunk)
+No guardrail | 0.000
+No guardrail
+0.000
+Regex only | 0.009
+Regex only
+0.009
+NER only | 4.125
+NER only
+4.125
+Regex + NER (proposed) | 4.129
+Regex + NER (proposed)
+4.129
+The regex detector adds negligible overhead (well under 0.1 ms per chunk); essentially all of the guardrail's processing time is attributable to the spaCy NER pass. Combining regex and NER adds no measurable overhead beyond running NER alone. This indicates that, at the current corpus scale, the guardrail's cost is dominated by the choice of NER model rather than by the number of detectors combined — a useful data point for future work considering a larger or more accurate NER model. End-to-end request latency, including embedding, retrieval, and Gemini generation, was not measured in this study, since it depends on network conditions and API response time rather than on the guardrail itself; the authors plan to report it as part of a full pipeline benchmark before final submission.
+F. Ablation Study
+To isolate the contribution of each detector, the same corpus was evaluated under three guardrail configurations: regex-only, NER-only, and the combined regex-and-NER configuration, reporting detection F1 and post-redaction leakage rate for each (processing latency for each configuration is reported in Table V).
+TABLE VI
+Ablation: Detection F1 and Post-Redaction Leakage Rate
+Configuration | PII F1 (%) | Leakage rate (%) | Latency (ms/chunk)
+Configuration
+PII F1 (%)
+Leakage rate (%)
+Latency (ms/chunk)
+Standard RAG (no guardrail) | — | 100.00 | 0.000
+Standard RAG (no guardrail)
+—
+100.00
+0.000
+Regex only | 59.57 | ≈ 51.9 | 0.009
+Regex only
+59.57
+≈ 51.9
+0.009
+NER only | 39.02 | ≈ 70.4 | 4.125
+NER only
+39.02
+≈ 70.4
+4.125
+Regex + NER (proposed) | 77.19 | 14.81 | 4.129
+Regex + NER (proposed)
+77.19
+14.81
+4.129
+The ablation results confirm that regex and NER are complementary rather than redundant: regex-only detection cannot reduce leakage below the share of the corpus's PII that is structured (emails, phone numbers, PAN, Aadhaar), and NER-only detection cannot reduce leakage below the share that is unstructured (names, amounts). Only the combined configuration addresses both categories simultaneously, which is reflected in its lower leakage rate relative to either detector run alone.
+G. Error Analysis
+Manual inspection of detector output on the evaluation corpus identified specific, reproducible error patterns rather than only a generic accuracy gap, summarized in Table VII.
+TABLE VII
+Representative Detection Errors Observed
+Error type | Example | Cause
+Error type
+Example
+Cause
+False negative | “Rs 10,000” not tagged MONEY | NER not calibrated to Rupee notation
+False negative
+“Rs 10,000” not tagged MONEY
+NER not calibrated to Rupee notation
+False positive | 10-digit reference number flagged as phone | Regex cannot distinguish formats
+False positive
+10-digit reference number flagged as phone
+Regex cannot distinguish formats
+False positive | State name tagged PERSON | NER entity-type confusion
+False positive
+State name tagged PERSON
+NER entity-type confusion
+The dominant false-negative pattern is spaCy's failure to tag Rupee-denominated amounts (e.g., “Rs 10,000”, “Rs. 45,000”) as MONEY entities, while a dollar-denominated amount (“$2,500”) was correctly recognized. This suggests the underlying general-purpose NER model is better calibrated to Western currency notation than to Indian Rupee notation, which is directly relevant to a system intended for Indian identifier formats (PAN, Aadhaar) and should be addressed either with a currency-aware regex supplement or a fine-tuned NER model.
+The dominant false-positive pattern for regex is that the ten-digit phone pattern cannot distinguish an actual phone number from any other ten-digit string, such as an internal reference or ticket number; one such case in the corpus was incorrectly flagged and redacted. The dominant false-positive pattern for NER is geopolitical entities (e.g., a state name) being misclassified as PERSON, consistent with informal false positives observed on resume-style documents during earlier prototype testing. Neither error type is unique to this corpus; both are structural limitations of using a general-purpose regex pattern and a general-purpose NER model without domain-specific tuning, and are discussed further as limitations in Section VII.
+VII. Results and Discussion
+Taken together, the results show that the hybrid guardrail provides a substantial, measured reduction in detected PII reaching the generation model (85.19%) at negligible processing overhead (approximately 4.13 ms per chunk), without requiring any change to the underlying retriever or generator. The combined detector's F1-score of 77.19% is lower than either detector's precision alone, reflecting a genuine and specific recall gap — principally unrecognized Rupee-denominated monetary amounts — rather than a diffuse or unexplained shortfall.
+Two aspects of the original evaluation plan remain unmeasured and are reported as such rather than estimated: the effect of redaction on answer utility, and end-to-end latency inclusive of embedding, retrieval, and generation time. Both require live access to the Gemini API and are the most immediate remaining work before this paper can claim a complete evaluation.
+VIII. Limitations
+Several limitations of the current prototype and evaluation were identified during this work and are stated here directly.
+Evaluation scale: the evaluation corpus (15 passages, 27 annotated PII instances) is small and synthetic; a larger, real multi-document benchmark is needed before the reported precision/recall/F1 figures can be treated as representative.
+NER currency-format gap: the NER detector does not reliably recognize Rupee-denominated amounts as MONEY entities, which is the principal driver of the recall gap reported in Section VI.
+Vector store session isolation: the current implementation does not reset the ChromaDB collection between document uploads in the same session, which could allow chunks from a previously uploaded document to be retrieved alongside a newly uploaded one.
+Entity and identifier coverage: redaction currently acts on PERSON and MONEY NER labels and on email/phone/PAN/Aadhaar regex patterns only; ORG entities and additional structured identifiers (bank account numbers, IFSC codes, credit-card-like numbers) are not yet implemented.
+Unmeasured answer utility and end-to-end latency: both require live Gemini API access and are not yet measured (Section VI-D, VI-E).
+Provider dependence: generation relies on a single third-party LLM API; even sanitized context is still transmitted to an external provider.
+IX. Conclusion and Future Work
+This paper presented a privacy-aware Retrieval-Augmented Generation framework that introduces a lightweight guardrail between retrieval and LLM generation, combining regex-based recognition of structured identifiers with spaCy-based Named Entity Recognition for less structured entities. On a labeled synthetic evaluation corpus, the combined detector achieved 77.19% F1 and reduced the rate of PII instances reaching the sanitized context from 100% to 14.81%, at an average guardrail-only overhead of 4.13 ms per chunk. The architecture does not require retraining the retrieval or generation models and can therefore be incorporated into an existing RAG pipeline with limited modification.
+The approach does not provide a formal end-to-end privacy guarantee, since entities missed by the configured detectors may remain in the retrieved context; the measured 14.81% residual leakage rate on the evaluation corpus makes this concrete rather than hypothetical. Immediate future work, in priority order, is: (1) measuring answer utility and end-to-end latency using the live Gemini API; (2) addressing the NER currency-format gap identified in Section VI-F; (3) resetting the ChromaDB collection on each new upload to remove the session-isolation limitation; (4) scaling the evaluation corpus to a larger, real multi-document benchmark; and (5) extending entity and identifier coverage (ORG redaction, bank account numbers, IFSC codes) once patterns can be added without materially raising the false-positive rate documented in Section VI-F.
+References
+[1]  S. Zeng, J. Zhang, P. He, Y. Xing, Y. Liu, H. Xu, J. Ren, S. Wang, D. Yin, Y. Chang, and J. Tang, “The good and the bad: Exploring privacy issues in retrieval-augmented generation (RAG),” in Findings of the Association for Computational Linguistics: ACL 2024, Bangkok, Thailand, Aug. 2024, pp. 4505–4524.
+[2]  T. Koga, R. Wu, and K. Chaudhuri, “Privacy-preserving retrieval augmented generation with differential privacy,” arXiv preprint arXiv:2412.04697, 2024.
+[3]  L. He, P. Tang, Y. Zhang, P. Zhou, and S. Su, “Mitigating privacy risks in retrieval-augmented generation via locally private entity perturbation,” Information Processing & Management, vol. 62, no. 4, Art. no. 104150, 2025.
+[4]  G. Zyskind, T. South, and A. Pentland, “Don’t forget private retrieval: distributed private similarity search for large language models,” in Proc. Fifth Workshop on Privacy in Natural Language Processing, Bangkok, Thailand, Aug. 2024, pp. 7–19.
+[5]  S. Zeng, J. Zhang, P. He, J. Ren, T. Zheng, H. Lu, H. Xu, H. Liu, Y. Xing, and J. Tang, “Mitigating the privacy issues in retrieval-augmented generation (RAG) via pure synthetic data,” in Proc. 2025 Conference on Empirical Methods in Natural Language Processing, Suzhou, China, 2025, pp. 24527–24558.
+[6]  A. Hemmat, M. Moqadas, A. Mamanpoosh, A. Rismanchian, and A. Fatemi, “VAGUE-Gate: Plug-and-play local-privacy shield for retrieval-augmented generation,” in Proc. 14th International Joint Conference on Natural Language Processing and 4th Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics, 2025, pp. 3715–3730.

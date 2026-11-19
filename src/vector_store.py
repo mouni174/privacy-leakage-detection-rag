@@ -6,30 +6,32 @@ from src.embeddings import get_embeddings
 def create_vector_store(
     chunks,
     persist_directory="chroma_db",
-    collection_name="current_document"
+    collection_name="current_document",
+    reset=True
 ):
     """
-    Create a fresh Chroma vector database for the current document.
+    Create or update a Chroma vector database.
 
-    Any existing collection with the same name is deleted first,
-    preventing chunks from previously uploaded documents from
-    being retrieved.
+    Args:
+        chunks (list): List of Document chunks.
+        persist_directory (str): Directory for vector store persistence.
+        collection_name (str): Collection name in Chroma.
+        reset (bool): If True, clears existing collection first. If False, appends.
     """
 
     try:
         embeddings = get_embeddings()
 
-        # Open existing Chroma collection
-        existing_db = Chroma(
-            persist_directory=persist_directory,
-            embedding_function=embeddings,
-            collection_name=collection_name
-        )
+        if reset:
+            # Open existing Chroma collection and delete previous contents
+            existing_db = Chroma(
+                persist_directory=persist_directory,
+                embedding_function=embeddings,
+                collection_name=collection_name
+            )
+            existing_db.delete_collection()
 
-        # Remove all chunks from the previous document
-        existing_db.delete_collection()
-
-        # Create a fresh collection for the new document
+        # Add chunks to collection
         vector_db = Chroma.from_documents(
             documents=chunks,
             embedding=embeddings,
@@ -43,3 +45,19 @@ def create_vector_store(
         raise Exception(
             f"Error creating vector store: {e}"
         )
+
+
+def add_documents_to_vector_store(
+    chunks,
+    persist_directory="chroma_db",
+    collection_name="current_document"
+):
+    """
+    Add document chunks to the existing vector store without resetting.
+    """
+    return create_vector_store(
+        chunks,
+        persist_directory=persist_directory,
+        collection_name=collection_name,
+        reset=False
+    )

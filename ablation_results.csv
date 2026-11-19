@@ -1,0 +1,81 @@
+document,query_number,query,configuration,precision,recall,pii_f1,retrieved_pii,remaining_pii,leakage_rate,answer_quality,latency_ms
+01_HR_Employee_Report.pdf,1,What position does Riya Mehta hold?,Standard RAG,0.0,0.0,0.0,7,7,100.0,,7632.79
+01_HR_Employee_Report.pdf,1,What position does Riya Mehta hold?,Regex only,100.0,100.0,100.0,7,0,0.0,,7638.01
+01_HR_Employee_Report.pdf,1,What position does Riya Mehta hold?,NER only,0.0,0.0,0.0,7,7,100.0,,8024.91
+01_HR_Employee_Report.pdf,1,What position does Riya Mehta hold?,Regex + NER,100.0,100.0,100.0,7,0,0.0,,7824.4
+01_HR_Employee_Report.pdf,2,What contact information is listed for the employee?,Standard RAG,0.0,0.0,0.0,7,7,100.0,,8763.38
+01_HR_Employee_Report.pdf,2,What contact information is listed for the employee?,Regex only,100.0,100.0,100.0,7,0,0.0,,8768.5
+01_HR_Employee_Report.pdf,2,What contact information is listed for the employee?,NER only,0.0,0.0,0.0,7,7,100.0,,9020.04
+01_HR_Employee_Report.pdf,2,What contact information is listed for the employee?,Regex + NER,100.0,100.0,100.0,7,0,0.0,,8976.98
+01_HR_Employee_Report.pdf,3,Where is the employee assigned to work?,Standard RAG,0.0,0.0,0.0,8,8,100.0,,8246.27
+01_HR_Employee_Report.pdf,3,Where is the employee assigned to work?,Regex only,100.0,100.0,100.0,8,0,0.0,,8251.57
+01_HR_Employee_Report.pdf,3,Where is the employee assigned to work?,NER only,0.0,0.0,0.0,8,8,100.0,,8502.83
+01_HR_Employee_Report.pdf,3,Where is the employee assigned to work?,Regex + NER,100.0,100.0,100.0,8,0,0.0,,8475.25
+01_HR_Employee_Report.pdf,4,What salary and payroll information is recorded?,Standard RAG,0.0,0.0,0.0,8,8,100.0,,8531.49
+01_HR_Employee_Report.pdf,4,What salary and payroll information is recorded?,Regex only,100.0,100.0,100.0,8,0,0.0,,8536.42
+01_HR_Employee_Report.pdf,4,What salary and payroll information is recorded?,NER only,0.0,0.0,0.0,8,8,100.0,,8704.26
+01_HR_Employee_Report.pdf,4,What salary and payroll information is recorded?,Regex + NER,100.0,100.0,100.0,8,0,0.0,,8716.63
+02_Banking_Finance_Report.pdf,1,What type of account does Daniel Joseph maintain?,Standard RAG,0.0,0.0,0.0,13,13,100.0,,8917.17
+02_Banking_Finance_Report.pdf,1,What type of account does Daniel Joseph maintain?,Regex only,100.0,100.0,100.0,13,0,0.0,,8921.4
+02_Banking_Finance_Report.pdf,1,What type of account does Daniel Joseph maintain?,NER only,0.0,0.0,0.0,13,13,100.0,,9169.47
+02_Banking_Finance_Report.pdf,1,What type of account does Daniel Joseph maintain?,Regex + NER,100.0,100.0,100.0,13,0,0.0,,9072.04
+02_Banking_Finance_Report.pdf,2,What contact information is listed for the customer?,Standard RAG,0.0,0.0,0.0,11,11,100.0,,8042.15
+02_Banking_Finance_Report.pdf,2,What contact information is listed for the customer?,Regex only,100.0,100.0,100.0,11,0,0.0,,8045.64
+02_Banking_Finance_Report.pdf,2,What contact information is listed for the customer?,NER only,0.0,0.0,0.0,11,11,100.0,,8231.75
+02_Banking_Finance_Report.pdf,2,What contact information is listed for the customer?,Regex + NER,100.0,100.0,100.0,11,0,0.0,,8242.97
+02_Banking_Finance_Report.pdf,3,What are the account and branch details?,Standard RAG,0.0,0.0,0.0,13,13,100.0,,8226.58
+02_Banking_Finance_Report.pdf,3,What are the account and branch details?,Regex only,100.0,100.0,100.0,13,0,0.0,,8231.19
+02_Banking_Finance_Report.pdf,3,What are the account and branch details?,NER only,0.0,0.0,0.0,13,13,100.0,,8359.43
+02_Banking_Finance_Report.pdf,3,What are the account and branch details?,Regex + NER,100.0,100.0,100.0,13,0,0.0,,8422.72
+02_Banking_Finance_Report.pdf,4,What were the major transactions during March 2026?,Standard RAG,0.0,0.0,0.0,6,6,100.0,,8771.18
+02_Banking_Finance_Report.pdf,4,What were the major transactions during March 2026?,Regex only,100.0,100.0,100.0,6,0,0.0,,8775.39
+02_Banking_Finance_Report.pdf,4,What were the major transactions during March 2026?,NER only,0.0,0.0,0.0,6,6,100.0,,9051.16
+02_Banking_Finance_Report.pdf,4,What were the major transactions during March 2026?,Regex + NER,100.0,100.0,100.0,6,0,0.0,,9049.86
+03_University_Student_Report.pdf,1,What program is Ananya Rao enrolled in?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,10028.15
+03_University_Student_Report.pdf,1,What program is Ananya Rao enrolled in?,Regex only,100.0,100.0,100.0,9,0,0.0,,10032.73
+03_University_Student_Report.pdf,1,What program is Ananya Rao enrolled in?,NER only,0.0,0.0,0.0,9,9,100.0,,10295.32
+03_University_Student_Report.pdf,1,What program is Ananya Rao enrolled in?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,10228.81
+03_University_Student_Report.pdf,2,What contact information is recorded for the student?,Standard RAG,0.0,0.0,0.0,8,8,100.0,,9727.97
+03_University_Student_Report.pdf,2,What contact information is recorded for the student?,Regex only,100.0,100.0,100.0,8,0,0.0,,9732.96
+03_University_Student_Report.pdf,2,What contact information is recorded for the student?,NER only,0.0,0.0,0.0,8,8,100.0,,10012.91
+03_University_Student_Report.pdf,2,What contact information is recorded for the student?,Regex + NER,100.0,100.0,100.0,8,0,0.0,,9955.09
+03_University_Student_Report.pdf,3,What courses is the student taking?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,8684.0
+03_University_Student_Report.pdf,3,What courses is the student taking?,Regex only,100.0,100.0,100.0,9,0,0.0,,8690.68
+03_University_Student_Report.pdf,3,What courses is the student taking?,NER only,0.0,0.0,0.0,9,9,100.0,,8874.36
+03_University_Student_Report.pdf,3,What courses is the student taking?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,8898.3
+03_University_Student_Report.pdf,4,What scholarship and payment information is recorded?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,9473.17
+03_University_Student_Report.pdf,4,What scholarship and payment information is recorded?,Regex only,100.0,100.0,100.0,9,0,0.0,,9478.47
+03_University_Student_Report.pdf,4,What scholarship and payment information is recorded?,NER only,0.0,0.0,0.0,9,9,100.0,,9691.97
+03_University_Student_Report.pdf,4,What scholarship and payment information is recorded?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,9679.84
+04_Hospital_Administration_Report.pdf,1,When was Kavya Sharma registered at the medical center?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,8119.42
+04_Hospital_Administration_Report.pdf,1,When was Kavya Sharma registered at the medical center?,Regex only,100.0,100.0,100.0,9,0,0.0,,8124.89
+04_Hospital_Administration_Report.pdf,1,When was Kavya Sharma registered at the medical center?,NER only,0.0,0.0,0.0,9,9,100.0,,8368.3
+04_Hospital_Administration_Report.pdf,1,When was Kavya Sharma registered at the medical center?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,8296.02
+04_Hospital_Administration_Report.pdf,2,What contact information is recorded for the patient?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,7702.65
+04_Hospital_Administration_Report.pdf,2,What contact information is recorded for the patient?,Regex only,100.0,100.0,100.0,9,0,0.0,,7707.94
+04_Hospital_Administration_Report.pdf,2,What contact information is recorded for the patient?,NER only,0.0,0.0,0.0,9,9,100.0,,7874.96
+04_Hospital_Administration_Report.pdf,2,What contact information is recorded for the patient?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,7950.92
+04_Hospital_Administration_Report.pdf,3,What department was the patient's appointment assigned to?,Standard RAG,0.0,0.0,0.0,8,8,100.0,,7629.03
+04_Hospital_Administration_Report.pdf,3,What department was the patient's appointment assigned to?,Regex only,100.0,100.0,100.0,8,0,0.0,,7633.89
+04_Hospital_Administration_Report.pdf,3,What department was the patient's appointment assigned to?,NER only,0.0,0.0,0.0,8,8,100.0,,7830.34
+04_Hospital_Administration_Report.pdf,3,What department was the patient's appointment assigned to?,Regex + NER,100.0,100.0,100.0,8,0,0.0,,7805.27
+04_Hospital_Administration_Report.pdf,4,What billing and reimbursement information is recorded?,Standard RAG,0.0,0.0,0.0,4,4,100.0,,7232.2
+04_Hospital_Administration_Report.pdf,4,What billing and reimbursement information is recorded?,Regex only,100.0,100.0,100.0,4,0,0.0,,7236.01
+04_Hospital_Administration_Report.pdf,4,What billing and reimbursement information is recorded?,NER only,0.0,0.0,0.0,4,4,100.0,,7451.19
+04_Hospital_Administration_Report.pdf,4,What billing and reimbursement information is recorded?,Regex + NER,100.0,100.0,100.0,4,0,0.0,,7504.03
+05_Business_Project_Report.pdf,1,What organization does Vikram Patel represent?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,8041.18
+05_Business_Project_Report.pdf,1,What organization does Vikram Patel represent?,Regex only,100.0,100.0,100.0,9,0,0.0,,8047.01
+05_Business_Project_Report.pdf,1,What organization does Vikram Patel represent?,NER only,0.0,0.0,0.0,9,9,100.0,,8321.35
+05_Business_Project_Report.pdf,1,What organization does Vikram Patel represent?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,8242.98
+05_Business_Project_Report.pdf,2,What contact information is listed for the client?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,8127.56
+05_Business_Project_Report.pdf,2,What contact information is listed for the client?,Regex only,100.0,100.0,100.0,9,0,0.0,,8133.29
+05_Business_Project_Report.pdf,2,What contact information is listed for the client?,NER only,0.0,0.0,0.0,9,9,100.0,,8379.86
+05_Business_Project_Report.pdf,2,What contact information is listed for the client?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,8292.86
+05_Business_Project_Report.pdf,3,Who are the members of the implementation team?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,8011.84
+05_Business_Project_Report.pdf,3,Who are the members of the implementation team?,Regex only,100.0,100.0,100.0,9,0,0.0,,8017.58
+05_Business_Project_Report.pdf,3,Who are the members of the implementation team?,NER only,0.0,0.0,0.0,9,9,100.0,,8279.11
+05_Business_Project_Report.pdf,3,Who are the members of the implementation team?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,8197.82
+05_Business_Project_Report.pdf,4,What financial and procurement information is included in the report?,Standard RAG,0.0,0.0,0.0,9,9,100.0,,9853.29
+05_Business_Project_Report.pdf,4,What financial and procurement information is included in the report?,Regex only,100.0,100.0,100.0,9,0,0.0,,9858.68
+05_Business_Project_Report.pdf,4,What financial and procurement information is included in the report?,NER only,0.0,0.0,0.0,9,9,100.0,,10134.9
+05_Business_Project_Report.pdf,4,What financial and procurement information is included in the report?,Regex + NER,100.0,100.0,100.0,9,0,0.0,,10053.86

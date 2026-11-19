@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="250" viewBox="0 0 900 250">
+<rect width="100%" height="100%" fill="#101827"/>
+<text x="24" y="34" fill="#F4F7FB" font-size="20" font-family="sans-serif">Retrieval evaluation (held-out queries)</text>
+<text x="24" y="76" fill="#9AA8BB" font-size="13" font-family="sans-serif">Ranking / filtering</text>
+<text x="24" y="100" fill="#DCE5F0" font-size="12" font-family="sans-serif">Precision@K</text>
+<rect x="170" y="85" width="116.67" height="18" rx="4" fill="#2DD4BF"/>
+<text x="293.67" y="99" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.167</text>
+<text x="24" y="130" fill="#DCE5F0" font-size="12" font-family="sans-serif">Recall@K</text>
+<rect x="170" y="115" width="600.00" height="18" rx="4" fill="#60A5FA"/>
+<text x="777.00" y="129" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.857</text>
+<text x="24" y="160" fill="#DCE5F0" font-size="12" font-family="sans-serif">MRR</text>
+<rect x="170" y="145" width="350.00" height="18" rx="4" fill="#FBBF24"/>
+<text x="527.00" y="159" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.500</text>
+<text x="24" y="190" fill="#DCE5F0" font-size="12" font-family="sans-serif">Irrelevant rate</text>
+<rect x="170" y="175" width="0.00" height="18" rx="4" fill="#F87171"/>
+<text x="177.00" y="189" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.000</text>
+<text x="24" y="220" fill="#DCE5F0" font-size="12" font-family="sans-serif">Raw duplicate rate</text>
+<rect x="170" y="205" width="38.89" height="18" rx="4" fill="#2DD4BF"/>
+<text x="215.89" y="219" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.056</text>
+</svg>

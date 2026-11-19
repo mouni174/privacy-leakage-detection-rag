@@ -1,137 +1,71 @@
-import re
+"""Span-based redaction for confirmed identifiers and contextual entities."""
+
+from src.privacy_detector import (
+    AADHAAR_PATTERN,
+    BANK_ACCOUNT_PATTERN,
+    CREDIT_CARD_PATTERN,
+    EMAIL_PATTERN,
+    GOVERNMENT_ID_PATTERN,
+    IFSC_PATTERN,
+    PAN_PATTERN,
+    PHONE_PATTERN,
+    DetectionFinding,
+    detect_findings,
+)
 
 
-# =========================================
-# Regex Patterns
-# =========================================
-
-EMAIL_PATTERN = r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-
-PHONE_PATTERN = r"\b\d{10}\b"
-PAN_PATTERN = r"\b[A-Z]{5,6}[0-9]{4}[A-Z]\b"
-
-AADHAAR_PATTERN = r"\b\d{4}\s\d{4}\s\d{4}\b"
-
-BANK_ACCOUNT_PATTERN = r"\b\d{10,18}\b"
-
-IFSC_PATTERN = r"\b[A-Z]{4}0[A-Z0-9]{6}\b"
-
-CREDIT_CARD_PATTERN = r"\b(?:\d{4}[- ]?){3}\d{4}\b"
-
-GOVERNMENT_ID_PATTERN = r"\b[A-Z]{2,10}-ID-(?:[A-Z]{2,5}-)?\d{4,8}\b"
-
-
-# =========================================
-# NER Entities to Redact
-# =========================================
-
-NER_REDACTION_LABELS = {
+_REPLACEMENTS = {
+    "EMAIL": "[EMAIL REDACTED]",
+    "PHONE": "[PHONE REDACTED]",
+    "PAN": "[PAN REDACTED]",
+    "AADHAAR": "[AADHAAR REDACTED]",
+    "BANK_ACCOUNT": "[BANK ACCOUNT REDACTED]",
+    "IFSC": "[IFSC REDACTED]",
+    "CREDIT_CARD": "[CARD REDACTED]",
+    "GOVERNMENT_ID": "[ID REDACTED]",
+    "INTERNAL_ID": "[INTERNAL ID REDACTED]",
+    "HEALTH_INFO": "[HEALTH INFORMATION REDACTED]",
     "PERSON": "[PERSON REDACTED]",
-    "MONEY": "[MONEY REDACTED]",
     "ORG": "[ORG REDACTED]",
     "GPE": "[LOCATION REDACTED]",
-    "LOC": "[LOCATION REDACTED]"
+    "LOC": "[LOCATION REDACTED]",
+    "DATE": "[DATE REDACTED]",
+    "MONEY": "[AMOUNT REDACTED]",
+}
+
+NER_REDACTION_LABELS = {
+    category: replacement
+    for category, replacement in _REPLACEMENTS.items()
+    if category in {"PERSON", "GPE", "LOC", "DATE", "MONEY", "ORG"}
 }
 
 
-# =========================================
-# Redaction
-# =========================================
-
-def redact_sensitive_data(text: str, ner_findings=None):
-    """
-    Redacts sensitive information using Regex and NER.
-    """
-
-    try:
-
-        # -------------------------------------
-        # 1. Regex-based redaction
-        # -------------------------------------
-
-        text = re.sub(
-            EMAIL_PATTERN,
-            "[EMAIL REDACTED]",
-            text
+def redact_sensitive_data(
+    text: str,
+    ner_findings=None,
+    *,
+    findings: list[DetectionFinding] | None = None,
+    include_uncertain: bool = False,
+) -> str:
+    """Redact selected findings by their original spans without global replace."""
+    del ner_findings
+    detected = findings if findings is not None else detect_findings(text)
+    selected = [
+        finding
+        for finding in detected
+        if finding.classification == "sensitive"
+        or (
+            include_uncertain
+            and finding.source == "NER"
+            and finding.category == "PERSON"
+            and finding.classification == "uncertain"
         )
+    ]
 
-        text = re.sub(
-            PHONE_PATTERN,
-            "[PHONE REDACTED]",
-            text
-        )
-
-        text = re.sub(
-            PAN_PATTERN,
-            "[PAN REDACTED]",
-            text
-        )
-
-        text = re.sub(
-            AADHAAR_PATTERN,
-            "[AADHAAR REDACTED]",
-            text
-        )
-
-        text = re.sub(
-            IFSC_PATTERN,
-            "[IFSC REDACTED]",
-            text
-        )
-
-        text = re.sub(
-            CREDIT_CARD_PATTERN,
-            "[CARD REDACTED]",
-            text
-        )
-
-        text = re.sub(
-            GOVERNMENT_ID_PATTERN,
-            "[ID REDACTED]",
-            text
-        )
-
-        # Bank account numbers are processed after
-        # phone numbers so phone numbers are not
-        # replaced as bank accounts.
-        text = re.sub(
-            BANK_ACCOUNT_PATTERN,
-            "[BANK_ACCOUNT REDACTED]",
-            text
-        )
-
-
-        # -------------------------------------
-        # 2. NER-based redaction
-        # -------------------------------------
-
-        if ner_findings:
-
-            for label, entities in ner_findings.items():
-
-                if label not in NER_REDACTION_LABELS:
-                    continue
-
-                replacement = NER_REDACTION_LABELS[label]
-
-                for entity in entities:
-
-                    entity = entity.strip()
-
-                    if not entity:
-                        continue
-
-                    if entity in text:
-
-                        text = text.replace(
-                            entity,
-                            replacement
-                        )
-
-        return text
-
-    except Exception as e:
-
-        raise Exception(
-            f"Redaction Error: {e}"
-        )
+    redacted = text
+    for finding in sorted(selected, key=lambda item: item.start, reverse=True):
+        replacement = _REPLACEMENTS.get(finding.category)
+        if replacement is None:
+            continue
+        redacted = redacted[: finding.start] + replacement + redacted[finding.end :]
+    return redacted

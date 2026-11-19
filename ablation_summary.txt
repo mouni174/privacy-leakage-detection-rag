@@ -1,0 +1,21 @@
+PRIVACY-AWARE RAG ABLATION STUDY
+======================================================================
+
+Configurations:
+1. Standard RAG
+2. Regex only
+3. NER only
+4. Regex + NER
+
+Average Results
+----------------------------------------------------------------------
+Configuration         PII F1 (%)   Leakage (%)    Latency (ms)
+Standard RAG                0.00        100.00         8488.07
+Regex only                100.00          0.00         8493.11
+NER only                    0.00        100.00         8728.92
+Regex + NER               100.00          0.00         8694.33
+
+NOTE:
+Answer Quality is intentionally left blank because a human-rated answer-quality score must not be fabricated. Populate it only after evaluating the generated answers using the predefined 1-5 rubric.
+
+Latency includes retrieval plus the detector/redaction processing for protected configurations. Standard RAG uses retrieval latency only.

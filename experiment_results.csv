@@ -1,0 +1,21 @@
+query_no,document,query,retrieved_pii,detected_predictions,correct_structured_detections,remaining_pii_after_redaction,baseline_latency_ms,proposed_latency_ms,action
+1,01_HR_Employee_Report.pdf,What position does Riya Mehta hold?,6,18,6,0,9220.63,9484.59,Redacted
+2,01_HR_Employee_Report.pdf,What contact information is listed for the employee?,6,18,6,0,9026.52,9247.4,Redacted
+3,01_HR_Employee_Report.pdf,Where is the employee assigned to work?,6,12,6,0,8980.32,9182.5,Redacted
+4,01_HR_Employee_Report.pdf,What salary and payroll information is recorded?,6,12,6,0,9139.85,9337.83,Redacted
+5,02_Banking_Finance_Report.pdf,What type of account does Daniel Joseph maintain?,7,14,7,0,9624.96,9844.49,Redacted
+6,02_Banking_Finance_Report.pdf,What contact information is listed for the customer?,6,16,6,0,8726.23,8862.33,Redacted
+7,02_Banking_Finance_Report.pdf,What are the account and branch details?,7,14,7,0,8562.52,8770.08,Redacted
+8,02_Banking_Finance_Report.pdf,What were the major transactions during March 2026?,3,8,3,0,8839.16,9057.49,Redacted
+9,03_University_Student_Report.pdf,What program is Ananya Rao enrolled in?,6,25,6,0,8536.94,8804.85,Redacted
+10,03_University_Student_Report.pdf,What contact information is recorded for the student?,5,22,5,0,9264.03,9529.46,Redacted
+11,03_University_Student_Report.pdf,What courses is the student taking?,6,29,6,0,8936.55,9182.78,Redacted
+12,03_University_Student_Report.pdf,What scholarship and payment information is recorded?,6,25,6,0,8671.24,8847.58,Redacted
+13,04_Hospital_Administration_Report.pdf,When was Kavya Sharma registered at the medical center?,5,15,5,0,8750.89,9007.9,Redacted
+14,04_Hospital_Administration_Report.pdf,What contact information is recorded for the patient?,5,15,5,0,8344.45,8561.44,Redacted
+15,04_Hospital_Administration_Report.pdf,What department was the patient's appointment assigned to?,5,13,5,0,8474.28,8672.43,Redacted
+16,04_Hospital_Administration_Report.pdf,What billing and reimbursement information is recorded?,2,8,2,0,8623.38,8822.9,Redacted
+17,05_Business_Project_Report.pdf,What organization does Vikram Patel represent?,6,22,6,0,8767.84,9042.89,Redacted
+18,05_Business_Project_Report.pdf,What contact information is listed for the client?,6,22,6,0,8929.87,9200.98,Redacted
+19,05_Business_Project_Report.pdf,Who are the members of the implementation team?,6,22,6,0,8587.37,8825.37,Redacted
+20,05_Business_Project_Report.pdf,What financial and procurement information is included in the report?,6,22,6,0,8360.81,8511.83,Redacted

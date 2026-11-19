@@ -1,0 +1,13 @@
+query_id,split,expected_relevant_chunks,returned_chunks_after_threshold_and_dedup,relevant_hits,reciprocal_rank,irrelevant_returned
+R13,evaluation,1,1,1,1.0,0
+R14,evaluation,1,1,1,1.0,0
+R15,evaluation,1,1,1,1.0,0
+R16,evaluation,1,1,1,1.0,0
+R17,evaluation,1,0,0,0.0,0
+R18,evaluation,1,1,1,1.0,0
+R19,evaluation,0,0,0,0.0,0
+R20,evaluation,0,0,0,0.0,0
+R21,evaluation,0,0,0,0.0,0
+R22,evaluation,0,0,0,0.0,0
+R23,evaluation,0,0,0,0.0,0
+R24,evaluation,1,1,1,1.0,0

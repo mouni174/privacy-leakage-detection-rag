@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "provenance": "All names, identifiers, contact values, organizations, and document text are synthetic evaluation fixtures.",
+  "privacy_cases": [
+    {
+      "id": "HR-01",
+      "domain": "hr_employee",
+      "text": "Employee name: Avery Example. Contact email: avery@example.com. Employee ID: EMP-482917. Employer: Northstar Systems.",
+      "annotations": [
+        {"value": "Avery Example", "category": "PERSON", "sensitive": true},
+        {"value": "avery@example.com", "category": "EMAIL", "sensitive": true},
+        {"value": "EMP-482917", "category": "INTERNAL_ID", "sensitive": true},
+        {"value": "Northstar Systems", "category": "ORG", "sensitive": false}
+      ]
+    },
+    {
+      "id": "HR-02",
+      "domain": "hr_employee",
+      "text": "I live in Mapleton and work for Cedar Labs. The office opened in March 2022.",
+      "annotations": [
+        {"value": "Mapleton", "category": "GPE", "sensitive": true, "rationale": "First-person residential location."},
+        {"value": "Cedar Labs", "category": "ORG", "sensitive": false},
+        {"value": "March 2022", "category": "DATE", "sensitive": false}
+      ]
+    },
+    {
+      "id": "HR-03",
+      "domain": "hr_employee",
+      "text": "My salary is $78,000. Employee ID: EMP-318204. The payroll system uses Python.",
+      "annotations": [
+        {"value": "$78,000", "category": "MONEY", "sensitive": true},
+        {"value": "EMP-318204", "category": "INTERNAL_ID", "sensitive": true},
+        {"value": "Python", "category": "TECHNICAL", "sensitive": false}
+      ]
+    },
+    {
+      "id": "BANK-01",
+      "domain": "banking_financial",
+      "text": "My name is Jordan Example. Account number: 123456789012345. Phone: 9876543210. PAN: ABCPE1234F.",
+      "annotations": [
+        {"value": "Jordan Example", "category": "PERSON", "sensitive": true},
+        {"value": "123456789012345", "category": "BANK_ACCOUNT", "sensitive": true},
+        {"value": "9876543210", "category": "PHONE", "sensitive": true},
+        {"value": "ABCPE1234F", "category": "PAN", "sensitive": true}
+      ]
+    },
+    {
+      "id": "BANK-02",
+      "domain": "banking_financial",
+      "text": "Aadhaar: 2345 6789 0123. IFSC code: HDFC0001234. These synthetic values are for testing.",
+      "annotations": [
+        {"value": "2345 6789 0123", "category": "AADHAAR", "sensitive": true},
+        {"value": "HDFC0001234", "category": "IFSC", "sensitive": true}
+      ]
+    },
+    {
+      "id": "BANK-03",
+      "domain": "banking_financial",
+      "text": "Cedar Bank has a branch in Lakeview. Its annual report was published in 2023.",
+      "annotations": [
+        {"value": "Cedar Bank", "category": "ORG", "sensitive": false},
+        {"value": "Lakeview", "category": "GPE", "sensitive": false},
+        {"value": "2023", "category": "DATE", "sensitive": false}
+      ]
+    },
+    {
+      "id": "HEALTH-01",
+      "domain": "healthcare",
+      "text": "Patient name: Morgan Example. Patient ID: PAT-582104. Phone: +1 (415) 555-2671. Date of birth: January 2, 1980. Diagnosis: Type 2 diabetes.",
+      "annotations": [
+        {"value": "Morgan Example", "category": "PERSON", "sensitive": true},
+        {"value": "PAT-582104", "category": "INTERNAL_ID", "sensitive": true},
+        {"value": "+1 (415) 555-2671", "category": "PHONE", "sensitive": true},
+        {"value": "January 2, 1980", "category": "DATE", "sensitive": true},
+        {"value": "Type 2 diabetes", "category": "HEALTH_INFO", "sensitive": true}
+      ]
+    },
+    {
+      "id": "HEALTH-02",
+      "domain": "healthcare",
+      "text": "Harbor Clinic operates in Springfield. Its public visitor guide was revised in April 2024.",
+      "annotations": [
+        {"value": "Harbor Clinic", "category": "ORG", "sensitive": false},
+        {"value": "Springfield", "category": "GPE", "sensitive": false},
+        {"value": "April 2024", "category": "DATE", "sensitive": false}
+      ]
+    },
+    {
+      "id": "HEALTH-03",
+      "domain": "healthcare",
+      "text": "Medication: Examplemab. Allergy: synthetic pollen extract. The record is fabricated for testing.",
+      "annotations": [
+        {"value": "Examplemab", "category": "HEALTH_INFO", "sensitive": true},
+        {"value": "synthetic pollen extract", "category": "HEALTH_INFO", "sensitive": true}
+      ]
+    },
+    {
+      "id": "UNIV-01",
+      "domain": "university",
+      "text": "Student name: Taylor Example. Student ID: STU-812340. Email: taylor@example.edu.",
+      "annotations": [
+        {"value": "Taylor Example", "category": "PERSON", "sensitive": true},
+        {"value": "STU-812340", "category": "INTERNAL_ID", "sensitive": true},
+        {"value": "taylor@example.edu", "category": "EMAIL", "sensitive": true}
+      ]
+    },
+    {
+      "id": "UNIV-02",
+      "domain": "university",
+      "text": "I live in Riverton and attend Example State University. The fall term begins in September 2025.",
+      "annotations": [
+        {"value": "Riverton", "category": "GPE", "sensitive": true, "rationale": "First-person residential location."},
+        {"value": "Example State University", "category": "ORG", "sensitive": false},
+        {"value": "September 2025", "category": "DATE", "sensitive": false}
+      ]
+    },
+    {
+      "id": "UNIV-03",
+      "domain": "university",
+      "text": "Student phone number: +91 98765 43210. Aadhaar number: 3456-7890-1234.",
+      "annotations": [
+        {"value": "+91 98765 43210", "category": "PHONE", "sensitive": true},
+        {"value": "3456-7890-1234", "category": "AADHAAR", "sensitive": true}
+      ]
+    },
+    {
+      "id": "BUS-01",
+      "domain": "business",
+      "text": "Contact person: Riley Example. Email: riley@example.org. Phone: (212) 555-0198. Company: Blue Mesa Works.",
+      "annotations": [
+        {"value": "Riley Example", "category": "PERSON", "sensitive": true},
+        {"value": "riley@example.org", "category": "EMAIL", "sensitive": true},
+        {"value": "(212) 555-0198", "category": "PHONE", "sensitive": true},
+        {"value": "Blue Mesa Works", "category": "ORG", "sensitive": false}
+      ]
+    },
+    {
+      "id": "BUS-02",
+      "domain": "business",
+      "text": "Internal staff ID: STAFF-730184. Bank account: 246813579135791. IFSC: ICIC0004321.",
+      "annotations": [
+        {"value": "STAFF-730184", "category": "INTERNAL_ID", "sensitive": true},
+        {"value": "246813579135791", "category": "BANK_ACCOUNT", "sensitive": true},
+        {"value": "ICIC0004321", "category": "IFSC", "sensitive": true}
+      ]
+    },
+    {
+      "id": "BUS-03",
+      "domain": "business",
+      "text": "Blue Mesa Works has an office in Fairview. Its public revenue summary was released in 2024.",
+      "annotations": [
+        {"value": "Blue Mesa Works", "category": "ORG", "sensitive": false},
+        {"value": "Fairview", "category": "GPE", "sensitive": false},
+        {"value": "2024", "category": "DATE", "sensitive": false}
+      ]
+    },
+    {
+      "id": "TECH-01",
+      "domain": "technical_resume",
+      "text": "My skills include Java, Python, SQL, React, Machine Learning, and ChromaDB.",
+      "annotations": [
+        {"value": "Java", "category": "TECHNICAL", "sensitive": false},
+        {"value": "Python", "category": "TECHNICAL", "sensitive": false},
+        {"value": "SQL", "category": "TECHNICAL", "sensitive": false},
+        {"value": "React", "category": "TECHNICAL", "sensitive": false},
+        {"value": "Machine Learning", "category": "TECHNICAL", "sensitive": false},
+        {"value": "ChromaDB", "category": "TECHNICAL", "sensitive": false}
+      ]
+    },
+    {
+      "id": "TECH-02",
+      "domain": "technical_resume",
+      "text": "My name is Casey Example. I built a project with LangChain, Gemini, TensorFlow, and GitHub.",
+      "annotations": [
+        {"value": "Casey Example", "category": "PERSON", "sensitive": true},
+        {"value": "LangChain", "category": "TECHNICAL", "sensitive": false},
+        {"value": "Gemini", "category": "TECHNICAL", "sensitive": false},
+        {"value": "TensorFlow", "category": "TECHNICAL", "sensitive": false},
+        {"value": "GitHub", "category": "TECHNICAL", "sensitive": false}
+      ]
+    },
+    {
+      "id": "TECH-03",
+      "domain": "technical_project",
+      "text": "The project team met in Portland in June 2024 and published a JavaScript and MySQL demo.",
+      "annotations": [
+        {"value": "Portland", "category": "GPE", "sensitive": false},
+        {"value": "June 2024", "category": "DATE", "sensitive": false},
+        {"value": "JavaScript", "category": "TECHNICAL", "sensitive": false},
+        {"value": "MySQL", "category": "TECHNICAL", "sensitive": false}
+      ]
+    }
+  ],
+  "retrieval": {
+    "k": 3,
+    "chunks": [
+      {"id": "hr-leave", "domain": "hr_employee", "text": "The synthetic employee handbook grants twenty paid leave days each year."},
+      {"id": "hr-leave-copy", "domain": "hr_employee", "duplicate_of": "hr-leave", "text": "The synthetic employee handbook grants twenty paid leave days each year."},
+      {"id": "hr-payroll", "domain": "hr_employee", "text": "The fictional payroll schedule pays employees on the final business day of each month."},
+      {"id": "bank-transfer", "domain": "banking_financial", "text": "The example checking product allows a maximum daily transfer of five thousand test dollars."},
+      {"id": "bank-hours", "domain": "banking_financial", "text": "The fictional Cedar Bank branch is open from nine in the morning until four in the afternoon."},
+      {"id": "health-visits", "domain": "healthcare", "text": "The synthetic clinic visitor desk is open from eight in the morning until six in the evening."},
+      {"id": "health-records", "domain": "healthcare", "text": "The fabricated health guide says appointment requests are reviewed within two business days."},
+      {"id": "univ-term", "domain": "university", "text": "The fictional university fall semester starts on September first."},
+      {"id": "univ-library", "domain": "university", "text": "The example campus library closes at ten in the evening on weekdays."},
+      {"id": "business-office", "domain": "business", "text": "The fictional Blue Mesa office is open on weekdays from nine to five."},
+      {"id": "business-expense", "domain": "business", "text": "The synthetic travel policy requires expense reports within thirty calendar days."},
+      {"id": "tech-stack", "domain": "technical", "text": "The fictional demo uses Python, ChromaDB, and Streamlit for a local RAG prototype."},
+      {"id": "tech-chunking", "domain": "technical", "text": "The example text splitter creates one thousand character chunks with two hundred character overlap."}
+    ],
+    "queries": [
+      {"id": "R01", "split": "calibration", "query": "How many paid leave days does the handbook grant?", "relevant_chunk_ids": ["hr-leave"]},
+      {"id": "R02", "split": "calibration", "query": "What is the daily transfer limit?", "relevant_chunk_ids": ["bank-transfer"]},
+      {"id": "R03", "split": "calibration", "query": "When is the visitor desk open?", "relevant_chunk_ids": ["health-visits"]},
+      {"id": "R04", "split": "calibration", "query": "When does the fall semester start?", "relevant_chunk_ids": ["univ-term"]},
+      {"id": "R05", "split": "calibration", "query": "What are the business office weekday hours?", "relevant_chunk_ids": ["business-office"]},
+      {"id": "R06", "split": "calibration", "query": "Which tools does the RAG demo use?", "relevant_chunk_ids": ["tech-stack"]},
+      {"id": "R07", "split": "calibration", "query": "What color is the payroll manager's car?", "relevant_chunk_ids": []},
+      {"id": "R08", "split": "calibration", "query": "What is the capital of Antarctica?", "relevant_chunk_ids": []},
+      {"id": "R09", "split": "calibration", "query": "Who won the fictional 2099 moon race?", "relevant_chunk_ids": []},
+      {"id": "R10", "split": "calibration", "query": "What is the bank manager's favorite song?", "relevant_chunk_ids": []},
+      {"id": "R11", "split": "calibration", "query": "How tall is the university mascot?", "relevant_chunk_ids": []},
+      {"id": "R12", "split": "calibration", "query": "What is the company's office pet's name?", "relevant_chunk_ids": []},
+      {"id": "R13", "split": "evaluation", "query": "On which day are employees paid?", "relevant_chunk_ids": ["hr-payroll"]},
+      {"id": "R14", "split": "evaluation", "query": "What are the branch opening hours?", "relevant_chunk_ids": ["bank-hours"]},
+      {"id": "R15", "split": "evaluation", "query": "How quickly are appointment requests reviewed?", "relevant_chunk_ids": ["health-records"]},
+      {"id": "R16", "split": "evaluation", "query": "When does the campus library close on weekdays?", "relevant_chunk_ids": ["univ-library"]},
+      {"id": "R17", "split": "evaluation", "query": "How long do employees have to submit expenses?", "relevant_chunk_ids": ["business-expense"]},
+      {"id": "R18", "split": "evaluation", "query": "What chunk size and overlap does the example splitter use?", "relevant_chunk_ids": ["tech-chunking"]},
+      {"id": "R19", "split": "evaluation", "query": "What is the employee handbook's swimming pool depth?", "relevant_chunk_ids": []},
+      {"id": "R20", "split": "evaluation", "query": "What is the bank branch's favorite movie?", "relevant_chunk_ids": []},
+      {"id": "R21", "split": "evaluation", "query": "What is the clinic director's home address?", "relevant_chunk_ids": []},
+      {"id": "R22", "split": "evaluation", "query": "Which planet hosts the university?", "relevant_chunk_ids": []},
+      {"id": "R23", "split": "evaluation", "query": "What is the office's secret Wi-Fi password?", "relevant_chunk_ids": []},
+      {"id": "R24", "split": "evaluation", "query": "Which database does the fictional RAG demo use?", "relevant_chunk_ids": ["tech-stack"]}
+    ]
+  }
+}

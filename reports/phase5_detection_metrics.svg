@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+<rect width="100%" height="100%" fill="#101827"/>
+<text x="24" y="34" fill="#F4F7FB" font-size="20" font-family="sans-serif">Privacy detector comparison (annotated spans)</text>
+<text x="24" y="76" fill="#9AA8BB" font-size="13" font-family="sans-serif">PRECISION</text>
+<text x="24" y="100" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex only</text>
+<rect x="170" y="85" width="600.00" height="18" rx="4" fill="#2DD4BF"/>
+<text x="777.00" y="99" fill="#DCE5F0" font-size="11" font-family="sans-serif">1.000</text>
+<text x="24" y="130" fill="#DCE5F0" font-size="12" font-family="sans-serif">NER only</text>
+<rect x="170" y="115" width="600.00" height="18" rx="4" fill="#60A5FA"/>
+<text x="777.00" y="129" fill="#DCE5F0" font-size="11" font-family="sans-serif">1.000</text>
+<text x="24" y="160" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex + NER</text>
+<rect x="170" y="145" width="600.00" height="18" rx="4" fill="#FBBF24"/>
+<text x="777.00" y="159" fill="#DCE5F0" font-size="11" font-family="sans-serif">1.000</text>
+<text x="24" y="196" fill="#9AA8BB" font-size="13" font-family="sans-serif">RECALL</text>
+<text x="24" y="220" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex only</text>
+<rect x="170" y="205" width="412.50" height="18" rx="4" fill="#2DD4BF"/>
+<text x="589.50" y="219" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.688</text>
+<text x="24" y="250" fill="#DCE5F0" font-size="12" font-family="sans-serif">NER only</text>
+<rect x="170" y="235" width="187.50" height="18" rx="4" fill="#60A5FA"/>
+<text x="364.50" y="249" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.312</text>
+<text x="24" y="280" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex + NER</text>
+<rect x="170" y="265" width="600.00" height="18" rx="4" fill="#FBBF24"/>
+<text x="777.00" y="279" fill="#DCE5F0" font-size="11" font-family="sans-serif">1.000</text>
+<text x="24" y="316" fill="#9AA8BB" font-size="13" font-family="sans-serif">F1</text>
+<text x="24" y="340" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex only</text>
+<rect x="170" y="325" width="488.89" height="18" rx="4" fill="#2DD4BF"/>
+<text x="665.89" y="339" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.815</text>
+<text x="24" y="370" fill="#DCE5F0" font-size="12" font-family="sans-serif">NER only</text>
+<rect x="170" y="355" width="285.71" height="18" rx="4" fill="#60A5FA"/>
+<text x="462.71" y="369" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.476</text>
+<text x="24" y="400" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex + NER</text>
+<rect x="170" y="385" width="600.00" height="18" rx="4" fill="#FBBF24"/>
+<text x="777.00" y="399" fill="#DCE5F0" font-size="11" font-family="sans-serif">1.000</text>
+<text x="24" y="436" fill="#9AA8BB" font-size="13" font-family="sans-serif">FPR</text>
+<text x="24" y="460" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex only</text>
+<rect x="170" y="445" width="0.00" height="18" rx="4" fill="#2DD4BF"/>
+<text x="177.00" y="459" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.000</text>
+<text x="24" y="490" fill="#DCE5F0" font-size="12" font-family="sans-serif">NER only</text>
+<rect x="170" y="475" width="0.00" height="18" rx="4" fill="#60A5FA"/>
+<text x="177.00" y="489" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.000</text>
+<text x="24" y="520" fill="#DCE5F0" font-size="12" font-family="sans-serif">Regex + NER</text>
+<rect x="170" y="505" width="0.00" height="18" rx="4" fill="#FBBF24"/>
+<text x="177.00" y="519" fill="#DCE5F0" font-size="11" font-family="sans-serif">0.000</text>
+</svg>

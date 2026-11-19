@@ -1,0 +1,4 @@
+detector,tp,fp,fn,tn,precision,recall,f1,fpr,annotated_positive_spans,annotated_negative_spans,unassessed_predictions_not_counted_as_fp,category_mismatches
+Regex only,22,0,10,30,1.0,0.6875,0.8148148148148148,0.0,32,30,0,0
+NER only,10,0,22,30,1.0,0.3125,0.47619047619047616,0.0,32,30,0,0
+Regex + NER,32,0,0,30,1.0,1.0,1.0,0.0,32,30,0,0

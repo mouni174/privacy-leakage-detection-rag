@@ -1,0 +1,121 @@
+{
+  "dataset": "tests\\fixtures\\phase5_eval.json",
+  "detection": {
+    "NER only": {
+      "annotated_negative_spans": 30,
+      "annotated_positive_spans": 32,
+      "category_mismatches": 0,
+      "f1": 0.47619047619047616,
+      "fn": 22,
+      "fp": 0,
+      "fpr": 0.0,
+      "precision": 1.0,
+      "recall": 0.3125,
+      "tn": 30,
+      "tp": 10,
+      "unassessed_predictions_not_counted_as_fp": 0
+    },
+    "Regex + NER": {
+      "annotated_negative_spans": 30,
+      "annotated_positive_spans": 32,
+      "category_mismatches": 0,
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "fpr": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tn": 30,
+      "tp": 32,
+      "unassessed_predictions_not_counted_as_fp": 0
+    },
+    "Regex only": {
+      "annotated_negative_spans": 30,
+      "annotated_positive_spans": 32,
+      "category_mismatches": 0,
+      "f1": 0.8148148148148148,
+      "fn": 10,
+      "fp": 0,
+      "fpr": 0.0,
+      "precision": 1.0,
+      "recall": 0.6875,
+      "tn": 30,
+      "tp": 22,
+      "unassessed_predictions_not_counted_as_fp": 0
+    }
+  },
+  "detection_latency": {
+    "NER only": {
+      "mean_ms": 4.644994444444444,
+      "measurements": 54,
+      "median_ms": 4.37995,
+      "p95_ms": 6.5113
+    },
+    "Regex + NER": {
+      "mean_ms": 4.3483833333333335,
+      "measurements": 54,
+      "median_ms": 3.9978,
+      "p95_ms": 6.7871
+    },
+    "Regex only": {
+      "mean_ms": 0.06531666666666666,
+      "measurements": 54,
+      "median_ms": 0.05065,
+      "p95_ms": 0.1271
+    }
+  },
+  "live_gemini_api_called": false,
+  "privacy_case_count": 18,
+  "privacy_leakage": {
+    "leakage_cases_by_category": [],
+    "leakage_rate": 0.0,
+    "sensitive_gold_spans": 32,
+    "unredacted_sensitive_spans": 0
+  },
+  "retrieval": {
+    "average_chroma_query_ms": 14.972070833333333,
+    "baseline_ranking_metrics": {
+      "duplicate_retrieval_rate_raw_top_k": 0.05555555555555555,
+      "irrelevant_retrieval_rate_after_filtering": 0.6818181818181818,
+      "mean_reciprocal_rank": 0.5833333333333334,
+      "post_dedup_duplicate_retrieval_rate": 0.0,
+      "precision_at_k": 0.19444444444444445,
+      "recall_at_k": 1.0,
+      "returned_results": 22
+    },
+    "baseline_threshold_l2": 1.5,
+    "calibration_queries": 12,
+    "candidate_pair_metrics": {
+      "f1": 0.923076923076923,
+      "fn": 1,
+      "fp": 0,
+      "fpr": 0.0,
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "tn": 149,
+      "tp": 6
+    },
+    "chroma_query_latency_ms": {
+      "mean": 14.972070833333333,
+      "measurements": 24,
+      "median": 14.5801,
+      "p95": 18.9351
+    },
+    "chunks": 13,
+    "current_production_threshold_l2": 1.5,
+    "duplicate_retrieval_rate_raw_top_k": 0.05555555555555555,
+    "evaluation_queries": 12,
+    "fetch_k": 9,
+    "irrelevant_retrieval_rate_after_filtering": 0.0,
+    "k": 3,
+    "mean_reciprocal_rank": 0.5,
+    "post_dedup_duplicate_retrieval_rate": 0.0,
+    "precision_at_k": 0.16666666666666666,
+    "recall_at_k": 0.8571428571428571,
+    "returned_results": 6,
+    "threshold_calibration_method": "Maximum candidate-pair F1 on calibration queries; ties minimize FPR, then prefer precision, then the smaller distance threshold.",
+    "threshold_l2": 0.792106568813324
+  },
+  "retrieval_chunk_count": 13,
+  "retrieval_query_count": 24
+}

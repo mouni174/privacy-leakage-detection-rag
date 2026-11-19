@@ -1,0 +1,14 @@
+PRIVACY-AWARE RAG EXPERIMENT SUMMARY
+Documents: 5
+Queries: 20
+Precision: 31.53%
+Recall: 100.00%
+F1-score: 47.95%
+Baseline PII leakage: 111
+Proposed PII remaining: 0
+Baseline leakage rate: 100.00%
+Proposed leakage rate: 0.00%
+Leakage reduction: 100.00%
+Mean baseline retrieval: 8818.39 ms
+Mean proposed retrieval+guardrail: 9039.86 ms
+Guardrail overhead: 2.51%
