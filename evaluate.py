@@ -1,4 +1,5 @@
 import csv
+import os
 import time
 from pathlib import Path
 
@@ -11,7 +12,12 @@ from src.ner_detector import detect_entities
 from src.redactor import redact_sensitive_data
 
 
-BASE = Path(r"C:\Users\tmoun\Downloads")
+BASE = Path(
+    os.environ.get(
+        "PRIVACY_RAG_EVALUATION_DATA",
+        Path(__file__).resolve().parent / "data",
+    )
+)
 
 DOCUMENTS = [
     BASE / "01_HR_Employee_Report.pdf",
@@ -174,7 +180,7 @@ def main():
         # Index this document into the current Chroma collection.
         docs = load_and_split_pdf(str(pdf))
         chunk_counts[pdf.name] = len(docs)
-        create_vector_store(docs)
+        create_vector_store(docs, reset=True)
 
         gt = GROUND_TRUTH[pdf.name]
 

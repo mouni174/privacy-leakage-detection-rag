@@ -19,7 +19,7 @@ from src.ui import (
 load_dotenv()
 
 st.set_page_config(
-    page_title="Privacy Audit | Privacy RAG",
+    page_title="Privacy Audit | Privacy Leakage Detection",
     page_icon=":material/receipt_long:",
     layout="wide",
 )

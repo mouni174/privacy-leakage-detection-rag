@@ -26,7 +26,7 @@ from src.ui import (
 load_dotenv()
 
 st.set_page_config(
-    page_title="RAG Query | Privacy RAG",
+    page_title="RAG Query | Privacy Leakage Detection",
     page_icon=":material/forum:",
     layout="wide",
 )
@@ -77,9 +77,35 @@ if not st.session_state.database_ready or not documents_in_session:
     )
     st.stop()
 
-scope_options = ["All Documents"] + list(documents_in_session.keys())
+document_ids = [
+    info["document_id"]
+    for info in documents_in_session.values()
+    if info.get("document_id")
+]
+indexed_document_ids = document_ids
+scope_options = ["All Documents", *document_ids]
+legacy_documents = [
+    info
+    for info in documents_in_session.values()
+    if not info.get("document_id")
+]
+if st.session_state.get("query_scope_selector") not in scope_options:
+    st.session_state.pop("query_scope_selector", None)
+if st.session_state.selected_document_id not in document_ids:
+    st.session_state.selected_document_id = None
 if st.session_state.selected_scope not in scope_options:
     st.session_state.selected_scope = "All Documents"
+if st.session_state.selected_scope == "All Documents":
+    st.session_state.selected_document_id = None
+else:
+    st.session_state.selected_document_id = st.session_state.selected_scope
+
+if legacy_documents:
+    st.warning(
+        f"{len(legacy_documents)} legacy document(s) have no stable document ID and "
+        "are excluded from retrieval to prevent filename collisions. Re-upload them "
+        "to index them with isolated IDs."
+    )
 
 policy_options = ["Redact & Continue", "Block Request"]
 if st.session_state.privacy_policy not in policy_options:
@@ -105,10 +131,22 @@ with controls_column:
             scope_options,
             index=scope_options.index(st.session_state.selected_scope),
             key="query_scope_selector",
-            format_func=sanitize_sensitive_text,
+            format_func=lambda value: (
+                "All Documents"
+                if value == "All Documents"
+                else sanitize_sensitive_text(
+                    documents_in_session.get(value, {}).get("original_filename", value)
+                )
+            ),
             help="Search all indexed documents or limit retrieval to one source.",
         )
+        if selected_scope not in scope_options:
+            st.error("The selected document is not part of this session's registry.")
+            st.stop()
         st.session_state.selected_scope = selected_scope
+        st.session_state.selected_document_id = (
+            None if selected_scope == "All Documents" else selected_scope
+        )
 
         st.markdown('<div class="pld-story-index">02 / POLICY</div>', unsafe_allow_html=True)
         st.markdown("**:material/policy: Privacy response**")
@@ -161,7 +199,25 @@ if submit_button:
             with st.spinner("Retrieving relevant context from ChromaDB…"):
                 retrieved = get_relevant_context(
                     question,
-                    doc_filter=selected_scope,
+                    document_ids=(
+                        indexed_document_ids
+                        if selected_scope == "All Documents"
+                        else None
+                    ),
+                    document_id=(
+                        selected_scope
+                        if selected_scope != "All Documents"
+                        and documents_in_session.get(selected_scope, {}).get("document_id")
+                        else None
+                    ),
+                    doc_filter=(
+                        documents_in_session.get(selected_scope, {}).get(
+                            "original_filename", selected_scope
+                        )
+                        if selected_scope != "All Documents"
+                        and not documents_in_session.get(selected_scope, {}).get("document_id")
+                        else None
+                    ),
                 )
 
             if isinstance(retrieved, dict):
@@ -247,7 +303,11 @@ if submit_button:
             )
             source_docs_str = ", ".join(source_docs_list)
             safe_target_scope = (
-                sanitize_sensitive_text(selected_scope)
+                sanitize_sensitive_text(
+                    documents_in_session.get(selected_scope, {}).get(
+                        "original_filename", selected_scope
+                    )
+                )
                 if selected_scope != "All Documents"
                 else "All Documents"
             )
@@ -305,6 +365,7 @@ if submit_button:
                 }
                 for index, document in enumerate(retrieved_documents, start=1)
             ]
+
             query_latency_ms = round((perf_counter() - request_started) * 1000, 3)
             redacted_entity_count = sum(
                 finding.redaction_status == "redacted"
@@ -348,6 +409,9 @@ if submit_button:
             st.session_state.last_query_result = {
                 "sanitized_query": sanitized_query,
                 "target_scope": safe_target_scope,
+                "target_document_id": (
+                    selected_scope if selected_scope != "All Documents" else None
+                ),
                 "privacy_policy": privacy_policy,
                 "sources": source_metadata,
                 "source_attribution": source_attribution,

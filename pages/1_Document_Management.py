@@ -1,15 +1,18 @@
 """PDF upload, vector indexing, and sanitized document exports."""
 
-import os
-import tempfile
+import uuid
 
 import streamlit as st
 from dotenv import load_dotenv
 
 from src.session_init import init_session_state
-from src.loader import load_and_split_pdf
-from src.vector_store import create_vector_store, add_documents_to_vector_store
-from src.pdf_sanitizer import sanitize_pdf
+from src.document_registry import (
+    remove_document_from_registry,
+    retain_selected_uploads,
+    unprocessed_uploads,
+)
+from src.document_ingest import process_pdf_upload
+from src.vector_store import delete_document_from_vector_store
 from src.ui import (
     apply_global_styles,
     render_page_header,
@@ -21,7 +24,7 @@ from src.ui import (
 load_dotenv()
 
 st.set_page_config(
-    page_title="Document Management | Privacy RAG",
+    page_title="Document Management | Privacy Leakage Detection",
     page_icon=":material/folder_managed:",
     layout="wide",
 )
@@ -94,12 +97,14 @@ with pipeline_column:
         )
         st.caption("Original documents remain unchanged.")
 
+retain_selected_uploads(st.session_state.seen_uploads, uploaded_files)
+
 if uploaded_files:
-    new_files = [
-        file
-        for file in uploaded_files
-        if file.name not in st.session_state.processed_files
-    ]
+    new_files = unprocessed_uploads(
+        uploaded_files,
+        st.session_state.processed_uploads,
+        st.session_state.seen_uploads,
+    )
 
     if new_files:
         st.space("small")
@@ -108,45 +113,51 @@ if uploaded_files:
         total = len(new_files)
         successful_files = 0
 
-        for idx, file in enumerate(new_files):
+        for idx, (file, fingerprint) in enumerate(new_files):
             file_bytes = file.getvalue()
+            document_id = str(uuid.uuid4())
 
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-                tmp_file.write(file_bytes)
-                pdf_path = tmp_file.name
-
+            vectors_indexed = False
             try:
                 with st.spinner(f"Indexing uploaded PDF {idx + 1} of {total}…"):
-                    chunks = load_and_split_pdf(pdf_path, doc_name=file.name)
+                    document_record = process_pdf_upload(
+                        file_bytes,
+                        file.name,
+                        document_id,
+                    )
+                    vectors_indexed = True
 
-                    if len(st.session_state.documents) == 0:
-                        create_vector_store(chunks, reset=True)
-                    else:
-                        add_documents_to_vector_store(chunks)
-
-                    sanitized_pdf_bytes = sanitize_pdf(file_bytes)
-
-                    st.session_state.documents[file.name] = {
-                        "chunks_count": len(chunks),
-                        "sanitized_bytes": sanitized_pdf_bytes,
-                        "status": "Indexed & Ready",
-                    }
-                    st.session_state.processed_files.add(file.name)
+                    document_record["upload_fingerprint"] = fingerprint
+                    st.session_state.documents[document_id] = document_record
+                    st.session_state.processed_files.add(document_id)
+                    st.session_state.processed_uploads[fingerprint] = document_id
+                    st.session_state.seen_uploads.add(fingerprint)
                     st.session_state.database_ready = True
                     successful_files += 1
 
             except Exception as exc:
+                st.session_state.documents.pop(document_id, None)
+                st.session_state.processed_files.discard(document_id)
+                st.session_state.processed_uploads.pop(fingerprint, None)
+                if getattr(exc, "rollback_error", None) is not None:
+                    st.error(
+                        "ChromaDB indexing failed and its document-scoped rollback also "
+                        f"failed ({type(exc.rollback_error).__name__}); document ID "
+                        f"{document_id} may have orphaned chunks."
+                    )
+                if vectors_indexed:
+                    try:
+                        delete_document_from_vector_store(document_id)
+                    except Exception as rollback_error:
+                        st.error(
+                            "Index rollback also failed "
+                            f"({type(rollback_error).__name__}); document ID {document_id} "
+                            "may have orphaned chunks."
+                        )
                 st.error(
                     "PDF processing failed "
                     f"({type(exc).__name__}). Check the file format and retry."
                 )
-
-            finally:
-                if os.path.exists(pdf_path):
-                    try:
-                        os.remove(pdf_path)
-                    except OSError:
-                        pass
 
             progress_bar.progress(
                 (idx + 1) / total,
@@ -181,9 +192,11 @@ else:
         f"· **{total_chunks}** searchable chunk{'s' if total_chunks != 1 else ''}"
     )
 
-    for doc_name, doc_info in documents.items():
+    for registry_key, doc_info in list(documents.items()):
+        document_id = doc_info.get("document_id")
+        display_name = doc_info.get("original_filename", registry_key)
         with st.container(border=True):
-            safe_doc_name = sanitize_sensitive_text(doc_name)
+            safe_doc_name = sanitize_sensitive_text(display_name)
             details_column, status_column, export_column = st.columns(
                 [2.4, 1, 1.3],
                 vertical_alignment="center",
@@ -194,6 +207,11 @@ else:
                 st.caption(
                     f"{doc_info['chunks_count']} indexed chunk(s) · "
                     "PDF source · session knowledge base"
+                )
+                st.caption(
+                    f"Document ID: {document_id[:12]}…"
+                    if document_id
+                    else "Document ID: legacy filename-based record"
                 )
             with status_column:
                 st.badge(
@@ -209,7 +227,7 @@ else:
                         data=sanitized_bytes,
                         file_name=f"sanitized_{safe_doc_name}",
                         mime="application/pdf",
-                        key=f"dl_{doc_name}",
+                        key=f"dl_{document_id or registry_key}",
                         width="stretch",
                         help=(
                             "Download the permanently redacted PDF copy. "
@@ -218,6 +236,58 @@ else:
                     )
                 else:
                     st.warning("Sanitized copy unavailable")
+
+            if document_id:
+                confirm_delete = st.checkbox(
+                    f"Confirm deletion of {safe_doc_name}",
+                    key=f"confirm_delete_{document_id}",
+                )
+                delete_col, _ = st.columns([1.3, 4])
+                with delete_col:
+                    if st.button(
+                        "Delete document",
+                        key=f"delete_document_{document_id}",
+                        type="secondary",
+                        icon=":material/delete:",
+                        width="stretch",
+                    ):
+                        if not confirm_delete:
+                            st.warning("Confirm the deletion before continuing.")
+                        else:
+                            try:
+                                deleted_count = delete_document_from_vector_store(document_id)
+                            except Exception as exc:
+                                st.error(
+                                    "Document deletion failed; the registry entry was retained "
+                                    f"({type(exc).__name__})."
+                                )
+                            else:
+                                if deleted_count == 0:
+                                    st.error(
+                                        "No indexed chunks were found; the registry entry was retained."
+                                    )
+                                else:
+                                    try:
+                                        remove_document_from_registry(
+                                            st.session_state,
+                                            registry_key,
+                                            document_id,
+                                        )
+                                    except Exception as exc:
+                                        st.error(
+                                            "Vectors were deleted, but the session registry could not "
+                                            f"be updated ({type(exc).__name__})."
+                                        )
+                                    else:
+                                        st.success(
+                                            f"Deleted {safe_doc_name} and {deleted_count} indexed chunk(s)."
+                                        )
+                                        st.rerun()
+            else:
+                st.caption(
+                    "Safe deletion is unavailable for this legacy record because its "
+                    "stored vectors have no document ID."
+                )
 
 if st.session_state.database_ready:
     st.space("small")

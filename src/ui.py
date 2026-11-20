@@ -131,6 +131,48 @@ def apply_global_styles() -> None:
             font-weight: 700;
         }
 
+        .pld-app-title-wrap {
+            margin: 0.35rem 0 1.8rem;
+            padding: 1.05rem 0 1.25rem;
+            border-bottom: 1px solid rgba(96, 165, 250, 0.28);
+            text-align: center;
+        }
+
+        .pld-app-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            margin: 0;
+            color: #F8FAFC;
+            font-size: clamp(1.75rem, 4vw, 2.85rem);
+            font-weight: 750;
+            letter-spacing: -0.045em;
+            line-height: 1.13;
+            text-wrap: balance;
+        }
+
+        .pld-app-title-text {
+            background: linear-gradient(100deg, #FFFFFF 48%, #BFDBFE 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .pld-app-title-icon {
+            flex: 0 0 auto;
+            color: #60A5FA;
+            font-family: "Material Symbols Rounded";
+            font-size: 0.85em;
+            font-weight: 400;
+            font-feature-settings: "liga";
+        }
+
+        @media (max-width: 600px) {
+            .pld-app-title-wrap { margin-bottom: 1.25rem; padding: 0.6rem 0 1rem; }
+            .pld-app-title { gap: 0.45rem; font-size: clamp(1.55rem, 7vw, 2.1rem); }
+        }
+
         .pld-hero {
             position: relative;
             overflow: hidden;
@@ -852,8 +894,8 @@ def render_sidebar_brand() -> None:
         <div class="pld-sidebar-brand">
             <div class="pld-brand-mark">P</div>
             <div>
-                <div class="pld-brand-name">Privacy RAG</div>
-                <div class="pld-brand-caption">PRIVACY INTELLIGENCE</div>
+                <div class="pld-brand-name">Privacy Leakage Detection</div>
+                <div class="pld-brand-caption">SECURE RAG MONITORING</div>
             </div>
         </div>
         """,
@@ -949,6 +991,7 @@ def render_page_header(
     status_label: str,
 ) -> None:
     """Render a workspace header distinct from the product landing page."""
+    render_application_title()
     st.markdown(
         f"""
         <header class="pld-page-header">
@@ -962,6 +1005,21 @@ def render_page_header(
             </div>
             <div class="pld-page-state">Workspace status<strong>{status_label}</strong></div>
         </header>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_application_title() -> None:
+    """Render the shared application title used across every page."""
+    st.markdown(
+        """
+        <div class="pld-app-title-wrap">
+            <h1 class="pld-app-title">
+                <span class="pld-app-title-icon" aria-hidden="true">shield_lock</span>
+                <span class="pld-app-title-text">Privacy Leakage Detection in RAG Applications</span>
+            </h1>
+        </div>
         """,
         unsafe_allow_html=True,
     )

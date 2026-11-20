@@ -20,7 +20,7 @@ from src.ui import (
 load_dotenv()
 
 st.set_page_config(
-    page_title="Privacy Dashboard | Privacy RAG",
+    page_title="Privacy Dashboard | Privacy Leakage Detection",
     page_icon=":material/shield:",
     layout="wide",
 )

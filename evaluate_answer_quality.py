@@ -1,4 +1,5 @@
 import csv
+import os
 from pathlib import Path
 
 from src.loader import load_and_split_pdf
@@ -8,7 +9,12 @@ from src.guardrail import process_context
 from src.llm import generate_answer
 
 
-BASE = Path(r"C:\Users\tmoun\Downloads")
+BASE = Path(
+    os.environ.get(
+        "PRIVACY_RAG_EVALUATION_DATA",
+        Path(__file__).resolve().parent / "data",
+    )
+)
 
 
 DOCUMENTS = [
@@ -72,7 +78,7 @@ def main():
 
         print(f"Chunks created: {len(docs)}")
 
-        create_vector_store(docs)
+        create_vector_store(docs, reset=True)
 
         # Four questions per document.
         for local_index in range(4):

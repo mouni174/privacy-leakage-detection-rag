@@ -1,4 +1,5 @@
 import os
+import uuid
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -7,7 +8,8 @@ def load_and_split_pdf(
     pdf_path,
     chunk_size=1000,
     chunk_overlap=200,
-    doc_name=None
+    doc_name=None,
+    document_id=None,
 ):
     """
     Load a PDF and split it into text chunks.
@@ -36,6 +38,7 @@ def load_and_split_pdf(
 
         # Determine document name
         source_name = doc_name or os.path.basename(pdf_path)
+        stable_document_id = str(document_id or uuid.uuid4())
 
         # Create text splitter
         text_splitter = RecursiveCharacterTextSplitter(
@@ -49,6 +52,7 @@ def load_and_split_pdf(
         # Tag every chunk with source_doc metadata
         for chunk in chunks:
             chunk.metadata["source_doc"] = source_name
+            chunk.metadata["document_id"] = stable_document_id
 
         return chunks
 

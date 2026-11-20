@@ -22,11 +22,18 @@ def init_session_state() -> None:
         # Set of already-processed filenames (prevents re-indexing on rerun)
         "processed_files": set(),
 
+        # SHA-256 upload fingerprint -> document ID, for rerun deduplication.
+        "processed_uploads": {},
+
+        # Selected-upload tombstones prevent a delete-triggered rerun from reindexing.
+        "seen_uploads": set(),
+
         # Whether the Chroma DB has at least one indexed document
         "database_ready": False,
 
         # Feature 3 – Query scope (persists across page navigation)
         "selected_scope": "All Documents",
+        "selected_document_id": None,
 
         # Feature 1 – Privacy policy (persists across page navigation)
         "privacy_policy": "Redact & Continue",

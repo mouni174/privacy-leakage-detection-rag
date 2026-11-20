@@ -4,12 +4,12 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from src.session_init import init_session_state
-from src.ui import apply_global_styles, render_sidebar_brand
+from src.ui import apply_global_styles, render_application_title, render_sidebar_brand
 
 load_dotenv()
 
 st.set_page_config(
-    page_title="Privacy Leakage Detection in RAG Systems",
+    page_title="Privacy Leakage Detection in RAG Applications",
     page_icon=":material/shield_lock:",
     layout="wide",
 )
@@ -18,17 +18,13 @@ init_session_state()
 apply_global_styles()
 render_sidebar_brand()
 st.sidebar.caption("Privacy-first RAG monitoring")
+render_application_title()
 
 st.markdown(
     """
     <section class="pld-landing-hero">
         <div class="pld-landing-copy">
             <div class="pld-landing-eyebrow">Research prototype · privacy-aware retrieval</div>
-            <h1 class="pld-landing-title">
-                Privacy Leakage<br>
-                Detection in<br>
-                <span class="pld-title-accent">RAG Systems</span>
-            </h1>
             <p class="pld-landing-subtitle">
                 A privacy inspection layer for retrieval-augmented generation.
                 Detect sensitive information in retrieved context, enforce a guardrail

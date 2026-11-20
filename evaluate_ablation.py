@@ -1,4 +1,5 @@
 import csv
+import os
 import time
 from pathlib import Path
 
@@ -13,7 +14,12 @@ from src.ner_detector import detect_entities
 # PATHS
 # ============================================================
 
-BASE = Path(r"C:\Users\tmoun\Downloads")
+BASE = Path(
+    os.environ.get(
+        "PRIVACY_RAG_EVALUATION_DATA",
+        Path(__file__).resolve().parent / "data",
+    )
+)
 
 DOCUMENTS = [
     BASE / "01_HR_Employee_Report.pdf",
@@ -249,7 +255,7 @@ def main():
 
         print(f"Chunks: {len(docs)}")
 
-        create_vector_store(docs)
+        create_vector_store(docs, reset=True)
 
         gt = GROUND_TRUTH[pdf.name]
 

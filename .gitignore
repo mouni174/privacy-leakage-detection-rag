@@ -17,6 +17,7 @@ env/
 # Generated data and local vector database
 chroma_db/
 data/
+manual_test_pdfs/
 
 # Editor and OS files
 .vscode/
