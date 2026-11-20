@@ -33,3 +33,5 @@ __pycache__/
 *.py[cod]
 chroma_db/
 .env
+create_test_pdfs.py
+reports/runtime-validation-report.md
